@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="OneBigCity_Console/OneBigCity_Console.csproj" Id="ae11fa65-279b-47cf-88f3-321b52166983" />
+  <Project Path="OneBigCity_Core/OneBigCity_Core.csproj" />
+  <Project Path="OneBigCity_Simulation/OneBigCity_Simulation.csproj" Id="ff9ba3fe-d563-414c-9481-2463cf4b99ee" />
+</Solution>
