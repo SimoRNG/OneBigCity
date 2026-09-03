@@ -6,7 +6,7 @@ using OneBigCity_Core.Classi.Meteo.EnumMeteo;
 
 var eventBus = new EventBus();
 var logger = new LoggerConsole(eventBus); // Il logger inizia subito ad ascoltare
-var meteo = new MotoreMeteo(eventBus, TipoMeteo.Sereno);
+var meteo = new MotoreMeteo(eventBus, new(TipoMeteo.Sereno, 25));
 var motore = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1));
 
 

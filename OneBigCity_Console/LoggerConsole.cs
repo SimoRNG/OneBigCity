@@ -20,7 +20,7 @@ public class LoggerConsole
     private void OnMeteoCambiato(EventoMeteoCambiato e)
     {
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"[METEO] Il tempo è cambiato: da {e.MeteoPrecedente} a {e.NuovoMeteo}!");
+        Console.WriteLine($"[METEO] Il tempo è cambiato. Meteo corrente: {e.Nuova.Tipo} ({e.Nuova.TemperaturaCelsius}°C)");
         Console.ResetColor();
     }
 

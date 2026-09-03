@@ -41,5 +41,33 @@ public static class CalendarioStagioni
         };
     }
 
+    public static float CalcolaTemperatura(Stagione stagione, TipoMeteo tipoMeteo)
+    {
+        // Temperature medie in base alla stagione
+        float tempBase = stagione switch
+        {
+            Stagione.Primavera => 18.0f,
+            Stagione.Estate => 28.0f,
+            Stagione.Autunno => 14.0f,
+            Stagione.Inverno => 3.0f,
+            _ => 15.0f
+        };
+
+        // Il meteo influisce sulla temperatura
+        float modifMeteo = tipoMeteo switch
+        {
+            TipoMeteo.Temporale => -3.0f,
+            TipoMeteo.PioggiaLeggera => -1.5f,
+            TipoMeteo.Neve => -4.0f,
+            TipoMeteo.Sereno => +2.0f,
+            _ => 0.0f
+        };
+
+        // Variazione casuale tra -1.5°C e +1.5°C
+        float variazione = (float)(Utilita.RNG(-15, 15) / 10.0);
+
+        return tempBase + modifMeteo + variazione;
+    }
+
 
 }

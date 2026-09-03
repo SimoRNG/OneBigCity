@@ -8,7 +8,7 @@ public class MotoreTemporale
     private CancellationTokenSource? _cts;
 
     public DateTime DataCorrente { get; private set; }
-    public int INTERVALLO_TICK_MS = 100 * 60; // 1 minuto reale = 1 giorno di gioco
+    public int INTERVALLO_TICK_MS = 1000 * 60; // 1 minuto reale = 1 giorno di gioco
     public bool IsInEsecuzione { get; private set; }
 
     public MotoreTemporale(EventBus eventBus, DateTime dataInizio)

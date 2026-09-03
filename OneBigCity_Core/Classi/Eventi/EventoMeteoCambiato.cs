@@ -1,16 +1,17 @@
-﻿using OneBigCity_Core.Classi.Meteo.EnumMeteo;
+﻿using OneBigCity_Core.Classi.Meteo;
+using OneBigCity_Core.Classi.Meteo.EnumMeteo;
 
 namespace OneBigCity_Core.Classi.Eventi;
 
 
 public class EventoMeteoCambiato
 {
-    public TipoMeteo MeteoPrecedente { get; }
-    public TipoMeteo NuovoMeteo { get; }
+    public CondizioneAtmosferica Precedente { get; }
+    public CondizioneAtmosferica Nuova { get; }
 
-    public EventoMeteoCambiato(TipoMeteo meteoPrecedente, TipoMeteo nuovoMeteo)
+    public EventoMeteoCambiato(CondizioneAtmosferica precedente, CondizioneAtmosferica nuova)
     {
-        MeteoPrecedente = meteoPrecedente;
-        NuovoMeteo = nuovoMeteo;
+        Precedente = precedente;
+        Nuova = nuova;
     }
 }

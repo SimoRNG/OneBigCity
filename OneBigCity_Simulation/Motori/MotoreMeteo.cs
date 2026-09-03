@@ -1,4 +1,5 @@
 ﻿using OneBigCity_Core.Classi.Eventi;
+using OneBigCity_Core.Classi.Meteo;
 using OneBigCity_Core.Classi.Meteo.EnumMeteo;
 using OneBigCity_Core.Classi.Static;
 
@@ -7,15 +8,15 @@ namespace OneBigCity_Simulation.Motori;
 public class MotoreMeteo
 {
     private readonly EventBus _eventBus;
-    private Dictionary<DateTime, TipoMeteo> StoricoMeteo = new();
+    private Dictionary<DateTime, CondizioneAtmosferica> StoricoMeteo = new();
 
-    public TipoMeteo MeteoAttuale { get; private set; }
+    public CondizioneAtmosferica CondizioneAttuale { get; private set; }
 
-    public MotoreMeteo(EventBus eventBus, TipoMeteo meteoIniziale = TipoMeteo.Sereno)
+    public MotoreMeteo(EventBus eventBus, CondizioneAtmosferica meteoIniziale = new())
     {
         _eventBus = eventBus;
 
-        MeteoAttuale = meteoIniziale;
+        CondizioneAttuale = meteoIniziale;
 
         _eventBus.Iscrivi<EventoNuovoGiorno>(OnNuovoGiorno);
 
@@ -26,26 +27,31 @@ public class MotoreMeteo
         // Calcolo un nuovo meteo (che può essere uguale al precedente)
         // Se ci sono variazioni notifico l'eventbus
 
-        TipoMeteo meteoPrecedente = MeteoAttuale;
-        MeteoAttuale = CalcolaNuovoMeteo(e.DataCorrente);
+        CondizioneAtmosferica condizionePrecedente = CondizioneAttuale;
 
-        // Aggiorna storico
-        StoricoMeteo[e.DataCorrente] = MeteoAttuale;
+        TipoMeteo nuovoTipo = CalcolaNuovoMeteo(e.DataCorrente);
+        Stagione stagione = CalendarioStagioni.OttieniStagioneDaData(e.DataCorrente);
+        float nuovaTemp = CalendarioStagioni.CalcolaTemperatura(stagione, nuovoTipo);
 
-        // Notifica solo se c'è stato un cambio rispetto al giorno prima
-        if (MeteoAttuale != meteoPrecedente)
+        CondizioneAttuale = new CondizioneAtmosferica(nuovoTipo, nuovaTemp);
+
+        // Notifica se la temperatura è cambiata in modo significativo o se è cambiato il tipo di meteo
+        if (CondizioneAttuale.Tipo != condizionePrecedente.Tipo ||
+            Math.Abs(CondizioneAttuale.TemperaturaCelsius - condizionePrecedente.TemperaturaCelsius) >= 1.0f)
         {
-            _eventBus.Pubblica(new EventoMeteoCambiato(meteoPrecedente, MeteoAttuale));
+            _eventBus.Pubblica(new EventoMeteoCambiato(condizionePrecedente, CondizioneAttuale));
         }
     }
 
     private TipoMeteo CalcolaNuovoMeteo(DateTime data)
     {
+        // Calcola il nuovo meteo a partire dalla data passata
+
         Stagione stagioneCorrente = CalendarioStagioni.OttieniStagioneDaData(data);
 
         if (StoricoMeteo.Count == 0) return CalendarioStagioni.OttieniMeteoStagionale(stagioneCorrente); // Caso inizio simulazione
 
-        TipoMeteo meteoIeri = StoricoMeteo.TryGetValue(data.AddDays(-1), out var mIeri) ? mIeri : MeteoAttuale;
+        TipoMeteo meteoIeri = StoricoMeteo.TryGetValue(data.AddDays(-1), out var mIeri) ? mIeri.Tipo : CondizioneAttuale.Tipo;
 
         int severitaIeri = (int)meteoIeri;
 
