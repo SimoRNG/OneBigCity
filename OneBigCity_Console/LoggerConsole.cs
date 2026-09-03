@@ -11,8 +11,17 @@ public class LoggerConsole
         _eventBus = eventBus;
 
         // Sottoscrizione agli eventi
+        _eventBus.Iscrivi<EventoMeteoCambiato>(OnMeteoCambiato);
         _eventBus.Iscrivi<EventoNuovoGiorno>(OnNuovoGiorno);
 
+    }
+
+
+    private void OnMeteoCambiato(EventoMeteoCambiato e)
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"[METEO] Il tempo è cambiato: da {e.MeteoPrecedente} a {e.NuovoMeteo}!");
+        Console.ResetColor();
     }
 
     private void OnNuovoGiorno(EventoNuovoGiorno e)

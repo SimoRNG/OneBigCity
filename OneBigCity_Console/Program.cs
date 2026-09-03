@@ -1,11 +1,14 @@
 ﻿using OneBigCity_Core.Classi.Eventi;
 using OneBigCity_Console;
-using OneBigCity_Simulation.Tempo;
+using OneBigCity_Simulation.Motori;
+using OneBigCity_Core.Classi.Meteo.EnumMeteo;
 
 
 var eventBus = new EventBus();
 var logger = new LoggerConsole(eventBus); // Il logger inizia subito ad ascoltare
+var meteo = new MotoreMeteo(eventBus, TipoMeteo.Sereno);
 var motore = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1));
+
 
 Console.WriteLine("--- SIMULAZIONE CITTÀ AVVIATA ---");
 Console.WriteLine("Premi 'P' per Pausa/Avvio, 'Q' per uscire.\n");
