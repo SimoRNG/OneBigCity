@@ -7,6 +7,17 @@ namespace OneBigCity_Simulation.Motori;
 
 public class MotoreMeteo
 {
+    /*
+     * Classe che si occupa della gestione delle condizioni atmosferiche.
+     * Per rendere realistico il cambio delle temperature in base alla data applico due strategie:
+     * 1. Ipotizzo che la temperatura oscilli come una sinusoidale durante l'anno, quindi per ogni
+     *  giorno dell'anno ho una temperatura 'target'
+     * 2. Non faccio fare sbalzi di temperatura estremi tra un giorno e l'altro
+     */
+
+
+    // TODO - Non ripetere i calcoli che possono essere fatto una volta all'avvio del motore
+
     private readonly EventBus _eventBus;
     private Dictionary<DateTime, CondizioneAtmosferica> StoricoMeteo = new();
 
@@ -24,20 +35,30 @@ public class MotoreMeteo
 
     private void OnNuovoGiorno(EventoNuovoGiorno e)
     {
+        // Notifico se cambia stagione
+        if (StoricoMeteo.Count > 0)
+        {
+            Stagione stagioneCorrente = CalendarioStagioni.OttieniStagioneDaData(e.DataCorrente);
+            Stagione stagioneIeri = CalendarioStagioni.OttieniStagioneDaData(e.DataCorrente.AddDays(-1));
+            if (stagioneCorrente != stagioneIeri) _eventBus.Pubblica(new EventoSistema($"Stagione cambiata. Nuova stagione: {stagioneCorrente.ToString()}"));
+        }
+
+
         // Calcolo un nuovo meteo (che può essere uguale al precedente)
         // Se ci sono variazioni notifico l'eventbus
 
         CondizioneAtmosferica condizionePrecedente = CondizioneAttuale;
 
         TipoMeteo nuovoTipo = CalcolaNuovoMeteo(e.DataCorrente);
-        Stagione stagione = CalendarioStagioni.OttieniStagioneDaData(e.DataCorrente);
-        float nuovaTemp = CalendarioStagioni.CalcolaTemperatura(stagione, nuovoTipo);
+        float nuovaTemp = CalcolaNuovaTemperatura(e.DataCorrente, nuovoTipo);
 
         CondizioneAttuale = new CondizioneAtmosferica(nuovoTipo, nuovaTemp);
 
-        // Notifica se la temperatura è cambiata in modo significativo o se è cambiato il tipo di meteo
+        StoricoMeteo[e.DataCorrente] = CondizioneAttuale; // AGGIORNAMENTO DELLO STORICO
+
+        // Notifica se la temperatura è cambiata in modo significativo (3 gradi) o se è cambiato il tipo di meteo
         if (CondizioneAttuale.Tipo != condizionePrecedente.Tipo ||
-            Math.Abs(CondizioneAttuale.TemperaturaCelsius - condizionePrecedente.TemperaturaCelsius) >= 1.0f)
+            Math.Abs(CondizioneAttuale.TemperaturaCelsius - condizionePrecedente.TemperaturaCelsius) >= 3f)
         {
             _eventBus.Pubblica(new EventoMeteoCambiato(condizionePrecedente, CondizioneAttuale));
         }
@@ -100,5 +121,34 @@ public class MotoreMeteo
         }
 
         return pesi.Keys.First();
+    }
+
+    public float CalcolaNuovaTemperatura(DateTime data, TipoMeteo nuovoTipo)
+    {
+        // Temperature medie in base alla stagione
+        float targetStagionale = CalendarioStagioni.CalcolaTemperaturaStagionaleBase(data);
+
+        // Il meteo influisce sulla temperatura
+        float modifMeteo = nuovoTipo switch
+        {
+            TipoMeteo.Temporale => -3.0f,
+            TipoMeteo.PioggiaLeggera => -1.5f,
+            TipoMeteo.Neve => -4.0f,
+            TipoMeteo.Sereno => +2.0f,
+            _ => 0.0f
+        };
+
+        float targetOggi = targetStagionale + modifMeteo;
+
+        // Se è il primo giorno della simulazione - direttamente target
+        if (StoricoMeteo.Count == 0) return targetOggi;
+
+        float tempIeri = CondizioneAttuale.TemperaturaCelsius;
+
+        // La temperatura si sposta dell'80% verso il target di oggi + un piccolo rumore casuale (+-0.5°C)
+        float variazioneCasuale = (float)(Utilita.RNG(-5, 5) / 10.0);
+        float nuovaTemp = tempIeri + (targetOggi - tempIeri) * 0.8f + variazioneCasuale;
+
+        return (float)Math.Round(nuovaTemp, 1);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using OneBigCity_Core.Classi.Meteo.EnumMeteo;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OneBigCity_Core.Classi.Static;
 
@@ -41,32 +42,18 @@ public static class CalendarioStagioni
         };
     }
 
-    public static float CalcolaTemperatura(Stagione stagione, TipoMeteo tipoMeteo)
+    public static float CalcolaTemperaturaStagionaleBase(DateTime data)
     {
-        // Temperature medie in base alla stagione
-        float tempBase = stagione switch
-        {
-            Stagione.Primavera => 18.0f,
-            Stagione.Estate => 28.0f,
-            Stagione.Autunno => 14.0f,
-            Stagione.Inverno => 3.0f,
-            _ => 15.0f
-        };
+        int giornoAnno = data.DayOfYear;
 
-        // Il meteo influisce sulla temperatura
-        float modifMeteo = tipoMeteo switch
-        {
-            TipoMeteo.Temporale => -3.0f,
-            TipoMeteo.PioggiaLeggera => -1.5f,
-            TipoMeteo.Neve => -4.0f,
-            TipoMeteo.Sereno => +2.0f,
-            _ => 0.0f
-        };
+        float tempMediaAnnua = 15.0f;
+        float ampiezzaStagionale = 12.0f; // Oscillerà da (15-12) = 3°C a (15+12) = 27°C
 
-        // Variazione casuale tra -1.5°C e +1.5°C
-        float variazione = (float)(Utilita.RNG(-15, 15) / 10.0);
+        // Calcolo dell'angolo in radianti (traslato di 20 giorni per fissare il minimo a gennaio)
+        double radianti = (2.0 * Math.PI * (giornoAnno - 20)) / 365.0;
 
-        return tempBase + modifMeteo + variazione;
+        // Curva sinusoidale continua
+        return tempMediaAnnua - (ampiezzaStagionale * (float)Math.Cos(radianti));
     }
 
 

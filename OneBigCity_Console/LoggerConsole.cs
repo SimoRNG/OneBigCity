@@ -13,21 +13,28 @@ public class LoggerConsole
         // Sottoscrizione agli eventi
         _eventBus.Iscrivi<EventoMeteoCambiato>(OnMeteoCambiato);
         _eventBus.Iscrivi<EventoNuovoGiorno>(OnNuovoGiorno);
+        _eventBus.Iscrivi<EventoSistema>(OnLogSistema);
 
     }
 
+    private void OnLogSistema(EventoSistema e)
+    {
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine($"[SISTEMA] {e.Log})");
+        Console.ResetColor();
+    }
 
     private void OnMeteoCambiato(EventoMeteoCambiato e)
     {
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"[METEO] Il tempo è cambiato. Meteo corrente: {e.Nuova.Tipo} ({e.Nuova.TemperaturaCelsius}°C)");
+        Console.WriteLine($"[METEO] Il tempo è cambiato. Meteo corrente: {e.Nuova})");
         Console.ResetColor();
     }
 
     private void OnNuovoGiorno(EventoNuovoGiorno e)
     {
         Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] NUOVO GIORNO SIMULAZIONE: {e.DataCorrente:yyyy-MM-dd}");
+        Console.WriteLine($"[TEMPO] NUOVO GIORNO SIMULAZIONE: {e.DataCorrente:yyyy-MM-dd}");
         Console.ResetColor();
     }
 }
