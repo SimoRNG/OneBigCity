@@ -2,6 +2,7 @@
 using OneBigCity_Core.Classi.Meteo;
 using OneBigCity_Core.Classi.Meteo.EnumMeteo;
 using OneBigCity_Core.Classi.Static;
+using OneBigCity_Simulation.Precompilati;
 
 namespace OneBigCity_Simulation.Motori;
 
@@ -16,12 +17,16 @@ public class MotoreMeteo
      */
 
 
-    // TODO - Non ripetere i calcoli che possono essere fatto una volta all'avvio del motore
-
     private readonly EventBus _eventBus;
     private Dictionary<DateTime, CondizioneAtmosferica> StoricoMeteo = new();
 
     public CondizioneAtmosferica CondizioneAttuale { get; private set; }
+
+    #region Precompilati
+    internal static readonly TipoMeteo[] ValoriMeteo = Enum.GetValues<TipoMeteo>();
+    // Tabella pre-calcolata delle probabilità di transizione base tra i vari meteo (MeteoIeri -> MeteoOggi -> PesoBase)
+    private static readonly Dictionary<(TipoMeteo Da, TipoMeteo A), float> PesiBaseTransizione = MeteoLUT.InizializzaPesiBase();
+    #endregion
 
     public MotoreMeteo(EventBus eventBus, CondizioneAtmosferica meteoIniziale = new())
     {
@@ -78,7 +83,9 @@ public class MotoreMeteo
 
         // Pesi base per tutti i meteo possibili
         var pesiMeteo = new Dictionary<TipoMeteo, float>();
-        var valoriMeteo = Enum.GetValues<TipoMeteo>();
+
+        // Sostituita questa logica con l'uso di tabelle di lookup
+        /*var valoriMeteo = Enum.GetValues<TipoMeteo>();
 
         foreach (TipoMeteo meteo in valoriMeteo)
         {
@@ -90,7 +97,7 @@ public class MotoreMeteo
                 2 => 15f, // Piccola probabilità di variazione (+-2)
                 _ => 5f   // Piccolissima probabilità di cambiamento repentino (Delta >= 3)
             };
-
+        
             // Modificatore stagionale
             float fattoreStagionale = CalendarioStagioni.OttieniFattoreStagionale(meteo, stagioneCorrente);
             float pesoFinale = pesoBase * fattoreStagionale;
@@ -98,6 +105,19 @@ public class MotoreMeteo
             if (pesoFinale > 0)
             {
                 pesiMeteo[meteo] = pesoFinale;
+            }
+        }
+        */
+
+        foreach (TipoMeteo meteoTarget in ValoriMeteo)
+        {
+            float pesoBase = PesiBaseTransizione[(meteoIeri, meteoTarget)];
+            float fattoreStagionale = CalendarioStagioni.OttieniFattoreStagionale(meteoTarget, stagioneCorrente);
+            float pesoFinale = pesoBase * fattoreStagionale;
+
+            if (pesoFinale > 0)
+            {
+                pesiMeteo[meteoTarget] = pesoFinale;
             }
         }
 

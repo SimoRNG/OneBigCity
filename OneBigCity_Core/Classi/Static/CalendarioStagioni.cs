@@ -1,10 +1,12 @@
 ﻿using OneBigCity_Core.Classi.Meteo.EnumMeteo;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OneBigCity_Core.Classi.Static;
 
 public static class CalendarioStagioni
 {
+    // Array di lookup: l'indice corrisponde al giorno dell'anno (da 1 a 366)
+    private static readonly float[] TemperatureStagionaliPrecalcolate = InizializzaTemperatureAnnuali();
+
     public static Stagione OttieniStagioneDaData(DateTime data)
     {
         return (data.Month * 100 + data.Day) switch
@@ -44,17 +46,25 @@ public static class CalendarioStagioni
 
     public static float CalcolaTemperaturaStagionaleBase(DateTime data)
     {
-        int giornoAnno = data.DayOfYear;
-
-        float tempMediaAnnua = 15.0f;
-        float ampiezzaStagionale = 12.0f; // Oscillerà da (15-12) = 3°C a (15+12) = 27°C
-
-        // Calcolo dell'angolo in radianti (traslato di 20 giorni per fissare il minimo a gennaio)
-        double radianti = (2.0 * Math.PI * (giornoAnno - 20)) / 365.0;
-
-        // Curva sinusoidale continua
-        return tempMediaAnnua - (ampiezzaStagionale * (float)Math.Cos(radianti));
+        return TemperatureStagionaliPrecalcolate[data.DayOfYear];
     }
 
+    private static float[] InizializzaTemperatureAnnuali()
+    {
+        // Metodo per pre-calcolare la curva delle temperature
 
+        var tabella = new float[367]; // Indici da 1 a 366
+
+        float tempMediaAnnua = 15.0f;
+        float ampiezzaStagionale = 12.0f;
+
+        for (int giornoAnno = 1; giornoAnno <= 366; giornoAnno++)
+        {
+            // Eseguo il calcolo trigonometrico solo qui - 366 volte in totale all'avvio
+            double radianti = (2.0 * Math.PI * (giornoAnno - 20)) / 365.0;
+            tabella[giornoAnno] = tempMediaAnnua - (ampiezzaStagionale * (float)Math.Cos(radianti));
+        }
+
+        return tabella;
+    }
 }

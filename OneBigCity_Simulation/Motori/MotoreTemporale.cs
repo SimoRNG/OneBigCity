@@ -41,6 +41,8 @@ public class MotoreTemporale
         {
             DataCorrente = DataCorrente.AddDays(1);
 
+            if (DataCorrente.Day == 1 && DataCorrente.Month == 1) _eventBus.Pubblica(new EventoSistema("E' iniziato un nuovo anno!"));
+
             _eventBus.Pubblica(new EventoNuovoGiorno(DataCorrente));
 
             // Attesa tra un tick e l'altro
