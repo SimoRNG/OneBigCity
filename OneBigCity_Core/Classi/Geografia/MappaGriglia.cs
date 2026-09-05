@@ -1,6 +1,6 @@
-﻿using OneBigCity_Core.Classi.Geografia.EnumGeografia;
+﻿using OneBigCity_Model.Classi.Geografia.EnumGeografia;
 
-namespace OneBigCity_Core.Classi.Geografia;
+namespace OneBigCity_Model.Classi.Geografia;
 
 public class MappaGriglia
 {

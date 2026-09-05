@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OneBigCity_Core.Classi.Geografia;
+namespace OneBigCity_Model.Classi.Geografia;
 
 public readonly struct Punto3D : IEquatable<Punto3D>
 {

@@ -1,4 +1,4 @@
-﻿namespace OneBigCity_Core.Classi.Geografia.EnumGeografia;
+﻿namespace OneBigCity_Model.Classi.Geografia.EnumGeografia;
 
 public enum TipoCella
 {

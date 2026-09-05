@@ -1,4 +1,4 @@
-﻿namespace OneBigCity_Core.Classi.Eventi;
+﻿namespace OneBigCity_Model.Classi.Eventi;
 
 /// <summary>
 /// Gestore centralizzato per la pubblicazione e sottoscrizione degli eventi

@@ -1,4 +1,4 @@
-﻿using OneBigCity_Core.Classi.Meteo.EnumMeteo;
+﻿using OneBigCity_Model.Classi.Meteo.EnumMeteo;
 using OneBigCity_Simulation.Motori;
 
 namespace OneBigCity_Simulation.Precompilati;

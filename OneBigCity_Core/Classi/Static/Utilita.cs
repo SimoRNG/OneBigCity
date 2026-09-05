@@ -1,4 +1,4 @@
-﻿namespace OneBigCity_Core.Classi.Static;
+﻿namespace OneBigCity_Model.Classi.Static;
 
 public static class Utilita
 {

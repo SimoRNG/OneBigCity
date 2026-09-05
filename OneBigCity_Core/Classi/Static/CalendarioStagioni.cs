@@ -1,6 +1,6 @@
-﻿using OneBigCity_Core.Classi.Meteo.EnumMeteo;
+﻿using OneBigCity_Model.Classi.Meteo.EnumMeteo;
 
-namespace OneBigCity_Core.Classi.Static;
+namespace OneBigCity_Model.Classi.Static;
 
 public static class CalendarioStagioni
 {

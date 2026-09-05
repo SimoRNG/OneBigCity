@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OneBigCity_Core\OneBigCity_Core.csproj" />
+    <ProjectReference Include="..\OneBigCity_Core\OneBigCity_Model.csproj" />
     <ProjectReference Include="..\OneBigCity_Simulation\OneBigCity_Simulation.csproj" />
   </ItemGroup>
 

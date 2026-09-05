@@ -1,4 +1,4 @@
-﻿namespace OneBigCity_Core.Classi.Eventi;
+﻿namespace OneBigCity_Model.Classi.Eventi;
 
 /// <summary>
 /// Evento pubblicato sul bus ogni volta che la simulazione avanza di un giorno

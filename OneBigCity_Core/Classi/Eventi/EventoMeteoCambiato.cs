@@ -1,5 +1,5 @@
-﻿using OneBigCity_Core.Classi.Meteo;
-namespace OneBigCity_Core.Classi.Eventi;
+﻿using OneBigCity_Model.Classi.Meteo;
+namespace OneBigCity_Model.Classi.Eventi;
 
 public class EventoMeteoCambiato
 {

@@ -1,4 +1,4 @@
-﻿using OneBigCity_Core.Classi.Eventi;
+﻿using OneBigCity_Model.Classi.Eventi;
 
 namespace OneBigCity_Simulation.Motori;
 

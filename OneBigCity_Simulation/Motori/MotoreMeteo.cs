@@ -1,7 +1,7 @@
-﻿using OneBigCity_Core.Classi.Eventi;
-using OneBigCity_Core.Classi.Meteo;
-using OneBigCity_Core.Classi.Meteo.EnumMeteo;
-using OneBigCity_Core.Classi.Static;
+﻿using OneBigCity_Model.Classi.Eventi;
+using OneBigCity_Model.Classi.Meteo;
+using OneBigCity_Model.Classi.Meteo.EnumMeteo;
+using OneBigCity_Model.Classi.Static;
 using OneBigCity_Simulation.Precompilati;
 
 namespace OneBigCity_Simulation.Motori;

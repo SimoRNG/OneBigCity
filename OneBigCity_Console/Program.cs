@@ -1,7 +1,7 @@
-﻿using OneBigCity_Core.Classi.Eventi;
+﻿using OneBigCity_Model.Classi.Eventi;
 using OneBigCity_Console;
 using OneBigCity_Simulation.Motori;
-using OneBigCity_Core.Classi.Meteo.EnumMeteo;
+using OneBigCity_Model.Classi.Meteo.EnumMeteo;
 
 
 var eventBus = new EventBus();

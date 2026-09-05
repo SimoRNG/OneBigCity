@@ -1,6 +1,6 @@
-﻿using OneBigCity_Core.Classi.Meteo.EnumMeteo;
+﻿using OneBigCity_Model.Classi.Meteo.EnumMeteo;
 
-namespace OneBigCity_Core.Classi.Meteo;
+namespace OneBigCity_Model.Classi.Meteo;
 
 public readonly record struct CondizioneAtmosferica(TipoMeteo Tipo, float TemperaturaCelsius)
 {

@@ -1,9 +1,9 @@
-﻿using OneBigCity_Core.Classi.Entita.EnumEntita;
+﻿using OneBigCity_Model.Classi.Entita.EnumEntita;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace OneBigCity_Core.Classi.Entita;
+namespace OneBigCity_Model.Classi.Entita;
 
 public class Persona
 {

@@ -1,4 +1,4 @@
-﻿namespace OneBigCity_Core.Classi.Meteo.EnumMeteo;
+﻿namespace OneBigCity_Model.Classi.Meteo.EnumMeteo;
 
 public enum TipoMeteo
 {

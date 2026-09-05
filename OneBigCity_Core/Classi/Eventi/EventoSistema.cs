@@ -1,4 +1,4 @@
-﻿namespace OneBigCity_Core.Classi.Eventi;
+﻿namespace OneBigCity_Model.Classi.Eventi;
 
 public class EventoSistema
 {
