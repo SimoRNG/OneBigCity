@@ -12,6 +12,7 @@ public class EdificioBase
     public string Nome { get; set; } = "";
     public string Descrizione { get; set; } = "";
     TipoEdificio Tipo { get; set; } = TipoEdificio.Non_Specificato;
+public int PercentualeCondizione { get; set; }
 
     public List<Punto3D> CoordinateIngressi { get; set; } = new();
     public int CapienzaMassima { get; set; }
