@@ -12,7 +12,7 @@ public class MappaGriglia
     // Dizionario che associa a ogni indice di Livello (es. -1, 0, 1) una matrice 2D di Celle [X, Y]
     private readonly Dictionary<int, CellaGriglia[,]> _strati;
 
-    public MappaGriglia(int lunghezza, int larghezza, int livelloMinimo = -3, int livelloMassimo = 3)
+    public MappaGriglia(int lunghezza = 10, int larghezza = 10, int livelloMinimo = -3, int livelloMassimo = 3)
     {
         Lunghezza = lunghezza;
         Larghezza = larghezza;
@@ -74,5 +74,24 @@ public class MappaGriglia
         return posizione.X >= 0 && posizione.X < Lunghezza &&
                posizione.Y >= 0 && posizione.Y < Larghezza &&
                posizione.Z >= LivelloMinimo && posizione.Z <= LivelloMassimo;
+    }
+
+    public bool ImpostaCella(CellaGriglia cella, Punto3D posizione)
+    {
+        if (!IsPosizioneValida(cella.Posizione)) return false;
+
+        _strati[posizione.Z][posizione.X, posizione.Y] = cella;
+
+        return true;
+    }
+    public bool ImpostaCella(int x, int y, int z, TipoCella tipo, bool calpestabile = true)
+    {
+        Punto3D pos = new Punto3D(x, y, z);
+
+        if (!IsPosizioneValida(pos))
+            return false;
+
+        _strati[z][x, y] = new CellaGriglia(pos, tipo, calpestabile);
+        return true;
     }
 }

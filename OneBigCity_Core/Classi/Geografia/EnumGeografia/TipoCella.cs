@@ -4,7 +4,9 @@ public enum TipoCella
 {
     Vuoto,          // Spazio d'aria
     Terreno,        // Erba, terra
+    Pianta,
     Strada,         
+    Ponte,
     Edificio,       
     Acqua,          // Fiume, lago, canale...
     Sottosuolo,     // Roccia o terreno non scavato
