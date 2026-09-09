@@ -8,7 +8,7 @@ public class MotoreTemporale
     private CancellationTokenSource? _cts;
 
     public DateTime DataCorrente { get; private set; }
-    public int INTERVALLO_TICK_MS = 500;
+    public int INTERVALLO_TICK_MS = 5000;
     public bool IsInEsecuzione { get; private set; }
 
     public MotoreTemporale(EventBus eventBus, DateTime dataInizio)
