@@ -1,0 +1,79 @@
+{
+  "Edifici": [
+    {
+      "$type": "Abitazione",
+      "Nome": "Casa Ovest Nord",
+      "Descrizione": "Abitazione situata a nord-ovest del fiume",
+      "PercentualeCondizione": 100,
+      "CapienzaMassima": 5,
+      "CoordinateOccupate": [
+        { "X": 3, "Y": 1, "Z": 0 }
+      ],
+      "CoordinateIngressi": [
+        { "X": 3, "Y": 2, "Z": 0 }
+      ]
+    },
+    {
+      "$type": "Abitazione",
+      "Nome": "Casa Est Nord",
+      "Descrizione": "Abitazione situata a nord-est del fiume",
+      "PercentualeCondizione": 100,
+      "CapienzaMassima": 5,
+      "CoordinateOccupate": [
+        { "X": 8, "Y": 1, "Z": 0 }
+      ],
+      "CoordinateIngressi": [
+        { "X": 8, "Y": 2, "Z": 0 }
+      ]
+    },
+    {
+      "$type": "Abitazione",
+      "Nome": "Casa Ovest Sud",
+      "Descrizione": "Abitazione situata a sud-ovest vicina alla rampa/acqua",
+      "PercentualeCondizione": 100,
+      "CapienzaMassima": 5,
+      "CoordinateOccupate": [
+        { "X": 3, "Y": 7, "Z": 0 }
+      ],
+      "CoordinateIngressi": [
+        { "X": 3, "Y": 6, "Z": 0 }
+      ]
+    },
+    {
+      "$type": "Abitazione",
+      "Nome": "Casa Est Sud",
+      "Descrizione": "Abitazione situata a sud-est",
+      "PercentualeCondizione": 100,
+      "CapienzaMassima": 5,
+      "CoordinateOccupate": [
+        { "X": 7, "Y": 8, "Z": 0 }
+      ],
+      "CoordinateIngressi": [
+        { "X": 7, "Y": 7, "Z": 0 }
+      ]
+    }
+  ],
+  "Persone": [
+    {
+      "Nome": "Mario",
+      "Cognome": "Rossi",
+      "Sesso": "Maschio",
+      "DataNascita": "1990-05-15T00:00:00",
+      "Posizione": { "X": 3, "Y": 2, "Z": 0 }
+    },
+    {
+      "Nome": "Lucia",
+      "Cognome": "Verdi",
+      "Sesso": "Femmina",
+      "DataNascita": "1994-08-22T00:00:00",
+      "Posizione": { "X": 5, "Y": 1, "Z": 0 }
+    },
+    {
+      "Nome": "Giuseppe",
+      "Cognome": "Bianchi",
+      "Sesso": "Maschio",
+      "DataNascita": "1985-12-03T00:00:00",
+      "Posizione": { "X": 12, "Y": 5, "Z": 0 }
+    }
+  ]
+}
