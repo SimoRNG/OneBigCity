@@ -36,7 +36,7 @@ public static class AlgoritmiPathFinding
         {
             Punto3D corrente = coda.Dequeue();
 
-            // Esploro i 4 vicini sul medesimo piano (Z)
+            // Esploro la i 4 vicini sul medesimo piano (Z)
             foreach (var (dx, dy) in DirezioniCardinali)
             {
                 Punto3D vicino = new Punto3D(corrente.X + dx, corrente.Y + dy, corrente.Z);

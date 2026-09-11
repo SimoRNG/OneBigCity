@@ -4,6 +4,7 @@ using OneBigCity_Model.Classi.Meteo.EnumMeteo;
 using OneBigCity_Model.Classi.Static;
 using OneBigCity_Simulation.Precompilati;
 
+
 namespace OneBigCity_Simulation.Motori;
 
 public class MotoreMeteo
@@ -28,7 +29,7 @@ public class MotoreMeteo
     private static readonly Dictionary<(TipoMeteo Da, TipoMeteo A), float> PesiBaseTransizione = MeteoLUT.InizializzaPesiBase();
     #endregion
 
-    public MotoreMeteo(EventBus eventBus, CondizioneAtmosferica meteoIniziale = new())
+    public MotoreMeteo(EventBus eventBus, CondizioneAtmosferica meteoIniziale)
     {
         _eventBus = eventBus;
 
@@ -129,7 +130,8 @@ public class MotoreMeteo
         float sommaPesi = pesi.Values.Sum();
 
         // Cast in double prima della divisione per avere la precisione decimale corretta
-        double fattoreRandom = (double)Utilita.RNG(0, 100) / 100.0;
+        double fattoreRandom = (double)OneBigCity_Model.Classi.Static.Utilita.RNG(0, 100) / 100.0;
+        
         double estrazione = fattoreRandom * sommaPesi;
 
         float accumulatore = 0;
@@ -166,7 +168,7 @@ public class MotoreMeteo
         float tempIeri = CondizioneAttuale.TemperaturaCelsius;
 
         // La temperatura si sposta dell'80% verso il target di oggi + un piccolo rumore casuale (+-0.5°C)
-        float variazioneCasuale = (float)(Utilita.RNG(-5, 5) / 10.0);
+        float variazioneCasuale = (float)(OneBigCity_Model.Classi.Static.Utilita.RNG(-5, 5) / 10.0);
         float nuovaTemp = tempIeri + (targetOggi - tempIeri) * 0.8f + variazioneCasuale;
 
         return (float)Math.Round(nuovaTemp, 1);
