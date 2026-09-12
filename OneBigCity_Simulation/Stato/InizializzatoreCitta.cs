@@ -58,7 +58,6 @@ public class InizializzatoreCitta
             }
             else if (!cellaOspite.IsCalpestabile)
             {
-                // TODO - Algoritmo BFS per cercare la prima cella disponibile su cui spostare la persona
                 Punto3D nuovaPosizioneValida = AlgoritmiPathFinding.CercaPrimaCellaCalpestabileBFS(mappaCitta, cellaOspite);
                 persona.Posizione = nuovaPosizioneValida;
                 Console.WriteLine($"[AVVISO] La persona '{persona.Nome} {persona.Cognome}' è su una cella non calpestabile. Nuova posizione assegnata: {nuovaPosizioneValida.ToString()}");

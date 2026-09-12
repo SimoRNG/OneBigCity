@@ -8,8 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="PrimaCitta_Entita.json" />
+    <None Remove="PrimaCitta_Mappa.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\OneBigCity_Core\OneBigCity_Model.csproj" />
     <ProjectReference Include="..\OneBigCity_Simulation\OneBigCity_Simulation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="PrimaCitta_Entita.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="PrimaCitta_Mappa.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

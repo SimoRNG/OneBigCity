@@ -3,6 +3,6 @@
 public enum Sesso
 {
     NonBinario,
-    Uomo,
-    Donna
+    Maschio,
+    Femmina
 }
