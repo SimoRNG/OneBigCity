@@ -8,13 +8,17 @@ public class MotoreTemporale
     private CancellationTokenSource? _cts;
 
     public DateTime DataCorrente { get; private set; }
-    public int INTERVALLO_TICK_MS = 5000;
+    public TimeSpan StepTemporale { get; set; }
+    public int IntervalloTickMs { get; set; } = 1000; // Intervallo reale tra i tick (es. 1 secondo reale)
     public bool IsInEsecuzione { get; private set; }
 
-    public MotoreTemporale(EventBus eventBus, DateTime dataInizio)
+    public event Action<DateTime>? OnTick; // Evento scatenato ad ogni tick con la nuova data/ora
+
+    public MotoreTemporale(EventBus eventBus, DateTime dataInizio, TimeSpan? stepTemporale = null)
     {
         _eventBus = eventBus;
         DataCorrente = dataInizio;
+        StepTemporale = stepTemporale ?? TimeSpan.FromDays(1); // Default 1 giorno, modificabile in seguito
         IsInEsecuzione = false;
     }
 
@@ -45,14 +49,15 @@ public class MotoreTemporale
 
             _eventBus.Pubblica(new EventoNuovoGiorno(DataCorrente));
 
-            // Attesa tra un tick e l'altro
+            OnTick?.Invoke(DataCorrente);
+
+            // Attesa reale tra un tick e l'altro
             try
             {
-                await Task.Delay(INTERVALLO_TICK_MS, token).ConfigureAwait(false);
+                await Task.Delay(IntervalloTickMs, token).ConfigureAwait(false);
             }
             catch (TaskCanceledException)
             {
-                // Gestisce l'interruzione pulita quando viene chiamata la Pausa
                 break;
             }
         }

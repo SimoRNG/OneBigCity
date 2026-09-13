@@ -1,4 +1,5 @@
-﻿using OneBigCity_Model.Classi.Eventi;
+﻿using OneBigCity_Model.Classi.Entita;
+using OneBigCity_Model.Classi.Eventi;
 using OneBigCity_Model.Classi.Meteo;
 using OneBigCity_Model.Classi.Meteo.EnumMeteo;
 using OneBigCity_Model.Classi.Static;
@@ -7,7 +8,7 @@ using OneBigCity_Simulation.Precompilati;
 
 namespace OneBigCity_Simulation.Motori;
 
-public class MotoreMeteo
+public class MotoreMeteo : ISistemaSimulazione
 {
     /*
      * Classe che si occupa della gestione delle condizioni atmosferiche.
@@ -20,8 +21,8 @@ public class MotoreMeteo
 
     private readonly EventBus _eventBus;
     private Dictionary<DateTime, CondizioneAtmosferica> StoricoMeteo = new();
-
     public CondizioneAtmosferica CondizioneAttuale { get; private set; }
+    private DateTime _ultimoGiornoCalcolato = DateTime.MinValue;
 
     #region Precompilati
     internal static readonly TipoMeteo[] ValoriMeteo = Enum.GetValues<TipoMeteo>();
@@ -35,10 +36,47 @@ public class MotoreMeteo
 
         CondizioneAttuale = meteoIniziale;
 
-        _eventBus.Iscrivi<EventoNuovoGiorno>(OnNuovoGiorno);
-
     }
 
+    public void Aggiorna(DateTime orarioCorrente, Citta citta)
+    {
+        // Ricalcoliamo il meteo solo quando cambia il giorno solare
+        // Il meteo non dipende dalla città
+
+        if (orarioCorrente.Date > _ultimoGiornoCalcolato.Date)
+        {
+            CalcolaMeteoGiornaliero(orarioCorrente.Date);
+            _ultimoGiornoCalcolato = orarioCorrente.Date;
+        }
+    }
+
+    private void CalcolaMeteoGiornaliero(DateTime dataCorrente)
+    {
+        if (StoricoMeteo.Count > 0)
+        {
+            Stagione stagioneCorrente = CalendarioStagioni.OttieniStagioneDaData(dataCorrente);
+            Stagione stagioneIeri = CalendarioStagioni.OttieniStagioneDaData(dataCorrente.AddDays(-1));
+            if (stagioneCorrente != stagioneIeri)
+                _eventBus.Pubblica(new EventoSistema($"Stagione cambiata. Nuova stagione: {stagioneCorrente}"));
+        }
+
+        CondizioneAtmosferica condizionePrecedente = CondizioneAttuale;
+
+        TipoMeteo nuovoTipo = CalcolaNuovoMeteo(dataCorrente);
+        float nuovaTemp = CalcolaNuovaTemperatura(dataCorrente, nuovoTipo);
+
+        CondizioneAttuale = new CondizioneAtmosferica(nuovoTipo, nuovaTemp);
+
+        StoricoMeteo[dataCorrente] = CondizioneAttuale;
+
+        if (CondizioneAttuale.Tipo != condizionePrecedente.Tipo ||
+            Math.Abs(CondizioneAttuale.TemperaturaCelsius - condizionePrecedente.TemperaturaCelsius) >= 3f)
+        {
+            _eventBus.Pubblica(new EventoMeteoCambiato(condizionePrecedente, CondizioneAttuale));
+        }
+    }
+
+    /*
     private void OnNuovoGiorno(EventoNuovoGiorno e)
     {
         // Notifico se cambia stagione
@@ -68,7 +106,7 @@ public class MotoreMeteo
         {
             _eventBus.Pubblica(new EventoMeteoCambiato(condizionePrecedente, CondizioneAttuale));
         }
-    }
+    }*/ // vecchia gestione con iscrizione diretta all'event bus
 
     private TipoMeteo CalcolaNuovoMeteo(DateTime data)
     {
@@ -131,7 +169,7 @@ public class MotoreMeteo
 
         // Cast in double prima della divisione per avere la precisione decimale corretta
         double fattoreRandom = (double)OneBigCity_Model.Classi.Static.Utilita.RNG(0, 100) / 100.0;
-        
+
         double estrazione = fattoreRandom * sommaPesi;
 
         float accumulatore = 0;

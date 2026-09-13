@@ -5,16 +5,10 @@ using OneBigCity_Model.Classi.Meteo.EnumMeteo;
 using OneBigCity_Simulation.Motori;
 using OneBigCity_Simulation.Stato;
 
-
-var eventBus = new EventBus();
-var logger = new LoggerConsole(eventBus); // Il logger inizia subito ad ascoltare
-var meteo = new MotoreMeteo(eventBus, new(TipoMeteo.Sereno, 25));
-var motore = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1));
-
 Console.WriteLine("Premere O per caricare i file mappa ed entità - Altrimenti un tasto qualsiasi.");
 var tastoCarica = Console.ReadKey(intercept: true).Key;
 
-Citta? cittaCorrente = null;
+Citta? cittaCorrente = new();
 
 if (tastoCarica == ConsoleKey.O)
 {
@@ -49,14 +43,33 @@ if (tastoCarica == ConsoleKey.O)
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine($"\n[ERRORE CARICAMENTO] Impossibile caricare la città: {ex.Message}");
         Console.ResetColor();
+
+        cittaCorrente = new();
     }
 }
 
+var eventBus = new EventBus();
+var logger = new LoggerConsole(eventBus); // Il logger inizia ad ascoltare subito
+
+var motoreMeteo = new MotoreMeteo(eventBus, new(TipoMeteo.Sereno, 25));
+
+// Creazione dell'orchestratore (con la città caricata o vuota)
+var orchestratore = new OrchestratoreSistemi(cittaCorrente);
+
+// SISTEMI INSERITI NELLA PIPELINE
+orchestratore.RegistraSistema(motoreMeteo);
+// -----
+
+var motoreTemporale = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1), TimeSpan.FromDays(1)); // 1 giorno per tick
+motoreTemporale.OnTick += orchestratore.EseguiTick;
+
+
+// Avvio della simulazione
 Console.WriteLine("--- SIMULAZIONE CITTÀ AVVIATA ---");
 Console.WriteLine("Premi 'P' per Pausa/Avvio, 'Q' per uscire.\n");
+motoreTemporale.Avvia();
 
 
-motore.Avvia();
 
 // Gestione input utente
 while (true)
@@ -65,20 +78,20 @@ while (true)
 
     if (tasto == ConsoleKey.P)
     {
-        if (motore.IsInEsecuzione)
+        if (motoreTemporale.IsInEsecuzione)
         {
-            motore.Pausa();
+            motoreTemporale.Pausa();
             Console.WriteLine("\n[SISTEMA] Simulazione in PAUSA.");
         }
         else
         {
-            motore.Avvia();
+            motoreTemporale.Avvia();
             Console.WriteLine("\n[SISTEMA] Simulazione RIPRESA.");
         }
     }
     else if (tasto == ConsoleKey.Q)
     {
-        motore.Pausa();
+        motoreTemporale.Pausa();
         Console.WriteLine("\n[SISTEMA] Chiusura simulazione...");
         break;
     }
