@@ -51,7 +51,7 @@ if (tastoCarica == ConsoleKey.O)
 var eventBus = new EventBus();
 var logger = new LoggerConsole(eventBus); // Il logger inizia ad ascoltare subito
 
-var motoreMeteo = new MotoreMeteo(eventBus, new(TipoMeteo.Sereno, 25));
+var motoreMeteo = new SistemaMeteo(eventBus, new(TipoMeteo.Sereno, 25));
 
 // Creazione dell'orchestratore (con la città caricata o vuota)
 var orchestratore = new OrchestratoreSistemi(cittaCorrente);

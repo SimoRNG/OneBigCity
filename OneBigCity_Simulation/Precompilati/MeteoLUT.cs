@@ -1,5 +1,5 @@
 ﻿using OneBigCity_Model.Classi.Meteo.EnumMeteo;
-using OneBigCity_Simulation.Motori;
+using OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 
 namespace OneBigCity_Simulation.Precompilati;
 
@@ -12,9 +12,9 @@ internal static class MeteoLUT
     {
         var dizionario = new Dictionary<(TipoMeteo, TipoMeteo), float>();
 
-        foreach (var da in MotoreMeteo.ValoriMeteo)
+        foreach (var da in SistemaMeteo.ValoriMeteo)
         {
-            foreach (var a in MotoreMeteo.ValoriMeteo)
+            foreach (var a in SistemaMeteo.ValoriMeteo)
             {
                 int delta = Math.Abs((int)a - (int)da);
                 float peso = delta switch

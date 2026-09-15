@@ -1,6 +1,6 @@
 ﻿using OneBigCity_Model.Classi.Entita;
 
-namespace OneBigCity_Simulation.Motori;
+namespace OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 
 public interface ISistemaSimulazione
 {

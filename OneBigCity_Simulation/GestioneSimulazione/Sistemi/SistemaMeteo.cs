@@ -6,9 +6,9 @@ using OneBigCity_Model.Classi.Static;
 using OneBigCity_Simulation.Precompilati;
 
 
-namespace OneBigCity_Simulation.Motori;
+namespace OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 
-public class MotoreMeteo : ISistemaSimulazione
+public class SistemaMeteo : ISistemaSimulazione
 {
     /*
      * Classe che si occupa della gestione delle condizioni atmosferiche.
@@ -30,7 +30,7 @@ public class MotoreMeteo : ISistemaSimulazione
     private static readonly Dictionary<(TipoMeteo Da, TipoMeteo A), float> PesiBaseTransizione = MeteoLUT.InizializzaPesiBase();
     #endregion
 
-    public MotoreMeteo(EventBus eventBus, CondizioneAtmosferica meteoIniziale)
+    public SistemaMeteo(EventBus eventBus, CondizioneAtmosferica meteoIniziale)
     {
         _eventBus = eventBus;
 
