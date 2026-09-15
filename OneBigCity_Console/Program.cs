@@ -2,6 +2,7 @@
 using OneBigCity_Model.Classi.Entita;
 using OneBigCity_Model.Classi.Eventi;
 using OneBigCity_Model.Classi.Meteo.EnumMeteo;
+using OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 using OneBigCity_Simulation.Motori;
 using OneBigCity_Simulation.Stato;
 
@@ -51,13 +52,15 @@ if (tastoCarica == ConsoleKey.O)
 var eventBus = new EventBus();
 var logger = new LoggerConsole(eventBus); // Il logger inizia ad ascoltare subito
 
-var motoreMeteo = new SistemaMeteo(eventBus, new(TipoMeteo.Sereno, 25));
+var sistemaMeteo = new SistemaMeteo(eventBus, new(TipoMeteo.Sereno, 25));
+var sistemaEdifici = new SistemaEdifici(eventBus);
 
 // Creazione dell'orchestratore (con la città caricata o vuota)
 var orchestratore = new OrchestratoreSistemi(cittaCorrente);
 
 // SISTEMI INSERITI NELLA PIPELINE
-orchestratore.RegistraSistema(motoreMeteo);
+orchestratore.RegistraSistema(sistemaMeteo);
+orchestratore.RegistraSistema(sistemaEdifici);
 // -----
 
 var motoreTemporale = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1), TimeSpan.FromDays(1)); // 1 giorno per tick

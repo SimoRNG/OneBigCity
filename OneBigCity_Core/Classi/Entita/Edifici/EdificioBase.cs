@@ -24,9 +24,19 @@ public class EdificioBase : IEntita
     public string Nome { get; set; } = "";
     public string Descrizione { get; set; } = "";
     public TipoEdificio Tipo { get; set; } = TipoEdificio.Non_Specificato;
+    public StatoEdificio Stato { get; set; } = StatoEdificio.Operativo;
+    public TipoAccessoEdificio Accesso { get; set; } = TipoAccessoEdificio.Libero;
     public int PercentualeCondizione { get; set; } = 100;
     public Persona? Proprietario { get; set; } = null;
-    public List<Punto3D> CoordinateIngressi { get; set; } = new(); // Ingressi calpestabili dall'esterno
+    public List<Punto3D> CoordinateAccessiEsterni { get; set; } = new(); // Ingressi calpestabili dall'esterno
     public List<Punto3D> CoordinateOccupate { get; set; } = new(); // Celle della mappa occupate dall'impronta a terra della struttura
     public int CapienzaMassima { get; set; }
+
+    
+    [JsonIgnore] public List<Persona> OccupantiAttuali { get; set; } = new(); // Lista delle persone attualmente presenti dentro la struttura
+
+
+    public MappaGriglia PlanimetriaInterna { get; set; } = new(5,5,0,0); // Mappa interna dell'edificio - dove vengono posizionate le persone all'interno
+    public List<Punto3D> CoordinateAccessiInterni { get; set; } = new(); // Punti sulla griglia interna per uscire dall'edificio
+
 }
