@@ -18,33 +18,6 @@ public class SistemaEdifici : ISistemaSimulazione
         GestisciStatoEdifici(citta);
     }
 
-    #region Entra/Esci
-
-    /*
-    Espongo metodi per far entrare/uscire una persona
-    Non è questo sistema a gestire direttamente l'accesso ad un edificio perchè una persona potrebbe
-    trovarsi su una casella di accesso esterno ma sta andando altrove e non vuole effettivamente entrare
-    nel dato edificio
-     */
-
-    // Metodo chiamato quando una persona vuole entrare
-    public bool ProvaIngresso(Persona persona, EdificioBase edificio)
-    {
-        if (edificio.Stato != StatoEdificio.Operativo) return false;
-        if (edificio.OccupantiAttuali.Count >= edificio.CapienzaMassima) return false;
-
-        edificio.OccupantiAttuali.Add(persona);
-
-        return true;
-    }
-
-    // Metodo chiamato quando una persona vuole uscire
-    public void FaiUscire(Persona persona, EdificioBase edificio)
-    {
-        edificio.OccupantiAttuali.Remove(persona);
-    }
-    #endregion
-
 
     private void ApplicaUsuraEdifici(Citta citta)
     {
