@@ -2,7 +2,7 @@
 
 namespace OneBigCity_Console;
 
-public class LoggerConsole
+public class LoggerConsole : IDisposable
 {
     private readonly EventBus _eventBus;
 
@@ -17,17 +17,24 @@ public class LoggerConsole
 
     }
 
+    public void Dispose()
+    {
+        _eventBus.Disiscrivi<EventoMeteoCambiato>(OnMeteoCambiato);
+        _eventBus.Disiscrivi<EventoNuovoGiorno>(OnNuovoGiorno);
+        _eventBus.Disiscrivi<EventoSistema>(OnLogSistema);
+    }
+
     private void OnLogSistema(EventoSistema e)
     {
         Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine($"[SISTEMA] {e.Log})");
+        Console.WriteLine($"[SISTEMA] {e.Log}");
         Console.ResetColor();
     }
 
     private void OnMeteoCambiato(EventoMeteoCambiato e)
     {
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"[METEO] Il tempo è cambiato. Meteo corrente: {e.Nuova})");
+        Console.WriteLine($"[METEO] Il tempo è cambiato. Meteo corrente: {e.Nuova}");
         Console.ResetColor();
     }
 

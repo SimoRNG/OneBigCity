@@ -43,7 +43,7 @@ public class MotoreTemporale
     {
         while (!token.IsCancellationRequested)
         {
-            DataCorrente = DataCorrente.AddDays(1);
+            DataCorrente = DataCorrente.Add(StepTemporale);
 
             if (DataCorrente.Day == 1 && DataCorrente.Month == 1) _eventBus.Pubblica(new EventoSistema("E' iniziato un nuovo anno!"));
 

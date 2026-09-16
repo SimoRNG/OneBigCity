@@ -9,7 +9,8 @@ namespace OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 
 public class SistemaEdifici : ISistemaSimulazione
 {
-    public SistemaEdifici(EventBus eventBus) { }
+    private readonly EventBus _eventBus;
+    public SistemaEdifici(EventBus eventBus) { _eventBus = eventBus; }
 
     public void Aggiorna(DateTime orarioCorrente, Citta citta)
     {
@@ -66,6 +67,8 @@ public class SistemaEdifici : ISistemaSimulazione
         {
             if (edificio.PercentualeCondizione == 0)
             {
+                _eventBus.Pubblica(new EventoSistema("L'edificio è andato distrutto!"));
+
                 edificio.Stato = StatoEdificio.Distrutto;
                 edificio.Accesso = TipoAccessoEdificio.Vietato;
                 edificio.CoordinateAccessiEsterni = new(); // Edificio distrutto - nessun accesso

@@ -8,7 +8,7 @@ using OneBigCity_Simulation.Precompilati;
 
 namespace OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 
-public class SistemaMeteo : ISistemaSimulazione
+public class SistemaMeteo : ISistemaSimulazione, IDisposable
 {
     /*
      * Classe che si occupa della gestione delle condizioni atmosferiche.
@@ -35,7 +35,16 @@ public class SistemaMeteo : ISistemaSimulazione
         _eventBus = eventBus;
 
         CondizioneAttuale = meteoIniziale;
+        _eventBus.Iscrivi<EventoNuovoGiorno>(OnNuovoGiorno);
+    }
+    public void Dispose()
+    {
+        _eventBus.Disiscrivi<EventoNuovoGiorno>(OnNuovoGiorno);
+    }
 
+    private void OnNuovoGiorno(EventoNuovoGiorno e)
+    {
+        CalcolaMeteoGiornaliero(e.DataCorrente.Date);
     }
 
     public void Aggiorna(DateTime orarioCorrente, Citta citta)
@@ -43,11 +52,10 @@ public class SistemaMeteo : ISistemaSimulazione
         // Ricalcoliamo il meteo solo quando cambia il giorno solare
         // Il meteo non dipende dalla città
 
-        if (orarioCorrente.Date > _ultimoGiornoCalcolato.Date)
-        {
-            CalcolaMeteoGiornaliero(orarioCorrente.Date);
-            _ultimoGiornoCalcolato = orarioCorrente.Date;
-        }
+        // NON FACCIO NULLA QUI - Non ho bisogno di aggiornare in base allo scatto del Tick che può essere di un
+        // TimeSpan qualsiasi, non necessariamente di un giorno
+        // L'aggiornamento del meteo è pensato per essere giornaliero
+        // Il sistema può ascoltare direttamente l'EventBus
     }
 
     private void CalcolaMeteoGiornaliero(DateTime dataCorrente)
@@ -75,38 +83,6 @@ public class SistemaMeteo : ISistemaSimulazione
             _eventBus.Pubblica(new EventoMeteoCambiato(condizionePrecedente, CondizioneAttuale));
         }
     }
-
-    /*
-    private void OnNuovoGiorno(EventoNuovoGiorno e)
-    {
-        // Notifico se cambia stagione
-        if (StoricoMeteo.Count > 0)
-        {
-            Stagione stagioneCorrente = CalendarioStagioni.OttieniStagioneDaData(e.DataCorrente);
-            Stagione stagioneIeri = CalendarioStagioni.OttieniStagioneDaData(e.DataCorrente.AddDays(-1));
-            if (stagioneCorrente != stagioneIeri) _eventBus.Pubblica(new EventoSistema($"Stagione cambiata. Nuova stagione: {stagioneCorrente.ToString()}"));
-        }
-
-
-        // Calcolo un nuovo meteo (che può essere uguale al precedente)
-        // Se ci sono variazioni notifico l'eventbus
-
-        CondizioneAtmosferica condizionePrecedente = CondizioneAttuale;
-
-        TipoMeteo nuovoTipo = CalcolaNuovoMeteo(e.DataCorrente);
-        float nuovaTemp = CalcolaNuovaTemperatura(e.DataCorrente, nuovoTipo);
-
-        CondizioneAttuale = new CondizioneAtmosferica(nuovoTipo, nuovaTemp);
-
-        StoricoMeteo[e.DataCorrente] = CondizioneAttuale; // AGGIORNAMENTO DELLO STORICO
-
-        // Notifica se la temperatura è cambiata in modo significativo (3 gradi) o se è cambiato il tipo di meteo
-        if (CondizioneAttuale.Tipo != condizionePrecedente.Tipo ||
-            Math.Abs(CondizioneAttuale.TemperaturaCelsius - condizionePrecedente.TemperaturaCelsius) >= 3f)
-        {
-            _eventBus.Pubblica(new EventoMeteoCambiato(condizionePrecedente, CondizioneAttuale));
-        }
-    }*/ // vecchia gestione con iscrizione diretta all'event bus
 
     private TipoMeteo CalcolaNuovoMeteo(DateTime data)
     {

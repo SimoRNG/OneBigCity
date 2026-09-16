@@ -3,7 +3,7 @@ using OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 
 namespace OneBigCity_Simulation.Motori;
 
-public class OrchestratoreSistemi
+public class OrchestratoreSistemi: IDisposable
 {
     private readonly List<ISistemaSimulazione> _sistemi = new();
     public Citta Citta { get; set; }
@@ -33,5 +33,21 @@ public class OrchestratoreSistemi
         {
             sistema.Aggiorna(orarioCorrente, Citta);
         }
+    }
+
+    public void Dispose()
+    {
+        // Faccio il dispose di ogni sistema 
+        // I sistemi implementeranno l'interfaccia per disiscriversi dall'eventbus (qualora stiano ascoltando un qualche evento)
+        // Es. il sistema meteo
+
+        foreach (var sistema in _sistemi)
+        {
+            if (sistema is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+        }
+        _sistemi.Clear();
     }
 }
