@@ -8,3 +8,19 @@ public enum TipoEdificio
     Industriale,
     ServizioPubblico
 }
+
+public enum StatoEdificio
+{
+    Operativo,
+    ChiusoTemporaneamente,
+    ChiusoDefinitivamente,
+    Abbandonato,
+    Distrutto
+}
+
+public enum TipoAccessoEdificio
+{
+    Libero,
+    Limitato,
+    Vietato
+}

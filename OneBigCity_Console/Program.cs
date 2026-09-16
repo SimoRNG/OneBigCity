@@ -2,6 +2,7 @@
 using OneBigCity_Model.Classi.Entita;
 using OneBigCity_Model.Classi.Eventi;
 using OneBigCity_Model.Classi.Meteo.EnumMeteo;
+using OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 using OneBigCity_Simulation.Motori;
 using OneBigCity_Simulation.Stato;
 
@@ -10,54 +11,16 @@ var tastoCarica = Console.ReadKey(intercept: true).Key;
 
 Citta? cittaCorrente = new();
 
-if (tastoCarica == ConsoleKey.O)
-{
-    Console.WriteLine("\n--- CARICAMENTO CITTA ---");
-
-    string baseDir = AppContext.BaseDirectory;
-
-    // file Mappa (.txt)
-    Console.Write("Inserisci il percorso del file Mappa (.txt). Lasciare vuoto per default: 'PrimaCitta_Mappa.txt' ");
-    string? percorsoMappa = Console.ReadLine();
-    if (string.IsNullOrWhiteSpace(percorsoMappa))
-        percorsoMappa = Path.Combine(baseDir, "PrimaCitta_Mappa.txt");
-
-    // file entità (.json)
-    Console.Write("Inserisci il percorso del file Entità (.json). Lasciare vuoto per default: 'PrimaCitta_Entita.json' ");
-    string? percorsoEntita = Console.ReadLine();
-    if (string.IsNullOrWhiteSpace(percorsoEntita))
-        percorsoEntita = Path.Combine(baseDir, "PrimaCitta_Entita.json");
-
-    try
-    {
-        ICaricatoreMappa caricatoreMappa = new CaricatoreMappaTesto();
-        ICaricatoreEntita caricatoreEntita = new CaricatoreEntitaJson();
-        InizializzatoreCitta inizializzatore = new InizializzatoreCitta(caricatoreEntita, caricatoreMappa);
-
-        cittaCorrente = inizializzatore.CaricaCitta(percorsoMappa, percorsoEntita, "PrimaCitta");
-
-        Console.WriteLine("Caricamento completato.");
-    }
-    catch (Exception ex)
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"\n[ERRORE CARICAMENTO] Impossibile caricare la città: {ex.Message}");
-        Console.ResetColor();
-
-        cittaCorrente = new();
-    }
-}
+if (tastoCarica == ConsoleKey.O) cittaCorrente = CaricaCitta();
 
 var eventBus = new EventBus();
 var logger = new LoggerConsole(eventBus); // Il logger inizia ad ascoltare subito
-
-var motoreMeteo = new MotoreMeteo(eventBus, new(TipoMeteo.Sereno, 25));
 
 // Creazione dell'orchestratore (con la città caricata o vuota)
 var orchestratore = new OrchestratoreSistemi(cittaCorrente);
 
 // SISTEMI INSERITI NELLA PIPELINE
-orchestratore.RegistraSistema(motoreMeteo);
+RegistraSistemi(eventBus, orchestratore);
 // -----
 
 var motoreTemporale = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1), TimeSpan.FromDays(1)); // 1 giorno per tick
@@ -94,5 +57,57 @@ while (true)
         motoreTemporale.Pausa();
         Console.WriteLine("\n[SISTEMA] Chiusura simulazione...");
         break;
+    }
+}
+
+
+return 0;
+
+
+void RegistraSistemi(EventBus eventBus, OrchestratoreSistemi orchestratore)
+{
+
+    var sistemaMeteo = new SistemaMeteo(eventBus, new(TipoMeteo.Sereno, 25));
+    var sistemaEdifici = new SistemaEdifici(eventBus);
+
+    orchestratore.RegistraSistema(sistemaMeteo);
+    eventBus.Pubblica(new EventoSistema("Sistema meteo registrato."));
+    orchestratore.RegistraSistema(sistemaEdifici);
+    eventBus.Pubblica(new EventoSistema("Sistema edifici registrato."));
+}
+
+Citta CaricaCitta()
+{
+    Console.WriteLine("\n--- CARICAMENTO CITTA ---");
+
+    string baseDir = AppContext.BaseDirectory;
+
+    // file Mappa (.txt)
+    Console.Write("Inserisci il percorso del file Mappa (.txt). Lasciare vuoto per default: 'PrimaCitta_Mappa.txt' ");
+    string? percorsoMappa = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(percorsoMappa))
+        percorsoMappa = Path.Combine(baseDir, "PrimaCitta_Mappa.txt");
+
+    // file entità (.json)
+    Console.Write("Inserisci il percorso del file Entità (.json). Lasciare vuoto per default: 'PrimaCitta_Entita.json' ");
+    string? percorsoEntita = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(percorsoEntita))
+        percorsoEntita = Path.Combine(baseDir, "PrimaCitta_Entita.json");
+
+    try
+    {
+        ICaricatoreMappa caricatoreMappa = new CaricatoreMappaTesto();
+        ICaricatoreEntita caricatoreEntita = new CaricatoreEntitaJson();
+        InizializzatoreCitta inizializzatore = new InizializzatoreCitta(caricatoreEntita, caricatoreMappa);
+
+        return inizializzatore.CaricaCitta(percorsoMappa, percorsoEntita, "PrimaCitta");
+    }
+    catch (Exception ex)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"\n[ERRORE CARICAMENTO] Impossibile caricare la città: {ex.Message}");
+        Console.ResetColor();
+
+        return new();
     }
 }
