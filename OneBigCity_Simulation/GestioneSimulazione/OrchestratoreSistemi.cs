@@ -1,4 +1,5 @@
 ﻿using OneBigCity_Model.Classi.Entita;
+using OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;
 using OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 
 namespace OneBigCity_Simulation.Motori;
@@ -7,6 +8,7 @@ public class OrchestratoreSistemi: IDisposable
 {
     private readonly List<ISistemaSimulazione> _sistemi = new();
     public Citta Citta { get; set; }
+    private readonly CommandBuffer _commandBuffer = new();
 
     public OrchestratoreSistemi(Citta citta)
     {
@@ -31,8 +33,11 @@ public class OrchestratoreSistemi: IDisposable
 
         foreach (var sistema in _sistemi)
         {
-            sistema.Aggiorna(orarioCorrente, Citta);
+            sistema.Aggiorna(orarioCorrente, Citta, _commandBuffer);
         }
+
+        _commandBuffer.ApplicaTutti(Citta);
+        _commandBuffer.Svuota();
     }
 
     public void Dispose()

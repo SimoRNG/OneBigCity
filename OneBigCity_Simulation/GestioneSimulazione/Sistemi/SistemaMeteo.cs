@@ -3,6 +3,7 @@ using OneBigCity_Model.Classi.Eventi;
 using OneBigCity_Model.Classi.Meteo;
 using OneBigCity_Model.Classi.Meteo.EnumMeteo;
 using OneBigCity_Model.Classi.Static;
+using OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;
 using OneBigCity_Simulation.Precompilati;
 
 
@@ -22,7 +23,6 @@ public class SistemaMeteo : ISistemaSimulazione, IDisposable
     private readonly EventBus _eventBus;
     private Dictionary<DateTime, CondizioneAtmosferica> StoricoMeteo = new();
     public CondizioneAtmosferica CondizioneAttuale { get; private set; }
-    private DateTime _ultimoGiornoCalcolato = DateTime.MinValue;
 
     #region Precompilati
     internal static readonly TipoMeteo[] ValoriMeteo = Enum.GetValues<TipoMeteo>();
@@ -47,10 +47,11 @@ public class SistemaMeteo : ISistemaSimulazione, IDisposable
         CalcolaMeteoGiornaliero(e.DataCorrente.Date);
     }
 
-    public void Aggiorna(DateTime orarioCorrente, Citta citta)
+    public void Aggiorna(DateTime orarioCorrente, Citta citta, CommandBuffer buffer)
     {
         // Ricalcoliamo il meteo solo quando cambia il giorno solare
         // Il meteo non dipende dalla città
+        // Il buffer non mi serve per ora
 
         // NON FACCIO NULLA QUI - Non ho bisogno di aggiornare in base allo scatto del Tick che può essere di un
         // TimeSpan qualsiasi, non necessariamente di un giorno

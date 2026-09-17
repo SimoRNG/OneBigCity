@@ -1,9 +1,8 @@
 ﻿using OneBigCity_Model.Classi.Entita;
-using OneBigCity_Model.Classi.Entita.Agenti;
-using OneBigCity_Model.Classi.Entita.Edifici;
 using OneBigCity_Model.Classi.Entita.EnumEntita;
 using OneBigCity_Model.Classi.Eventi;
-using OneBigCity_Model.Classi.Geografia;
+using OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;
+using System.Data;
 
 namespace OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 
@@ -12,10 +11,10 @@ public class SistemaEdifici : ISistemaSimulazione
     private readonly EventBus _eventBus;
     public SistemaEdifici(EventBus eventBus) { _eventBus = eventBus; }
 
-    public void Aggiorna(DateTime orarioCorrente, Citta citta)
+    public void Aggiorna(DateTime orarioCorrente, Citta citta, CommandBuffer buffer)
     {
         ApplicaUsuraEdifici(citta);
-        GestisciStatoEdifici(citta);
+        GestisciStatoEdifici(citta, buffer);
     }
 
 
@@ -32,7 +31,7 @@ public class SistemaEdifici : ISistemaSimulazione
         }
     }
 
-    private void GestisciStatoEdifici(Citta citta)
+    private void GestisciStatoEdifici(Citta citta, CommandBuffer buffer)
     {
         // Cambio lo stato degli edifici in pessime condizioni
 
@@ -48,7 +47,8 @@ public class SistemaEdifici : ISistemaSimulazione
                 edificio.PlanimetriaInterna = new();
                 if (edificio.OccupantiAttuali.Count > 0)
                 {
-                    // TODO - Elimina persona (l'edificio le è crollato addosso)
+                    foreach (Guid p in edificio.OccupantiAttuali)
+                        buffer.Aggiungi(new ComandoEliminaPersona(p));
                 }
             }
         }

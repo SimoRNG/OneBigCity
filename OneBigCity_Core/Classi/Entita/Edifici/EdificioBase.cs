@@ -33,7 +33,7 @@ public class EdificioBase : IEntita
     public int CapienzaMassima { get; set; }
 
     
-    [JsonIgnore] public List<Persona> OccupantiAttuali { get; set; } = new(); // Lista delle persone attualmente presenti dentro la struttura
+    public List<Guid> OccupantiAttuali { get; set; } = new(); // Lista dei Guid delleS persone attualmente presenti dentro la struttura
 
 
     public MappaGriglia PlanimetriaInterna { get; set; } = new(5,5,0,0); // Mappa interna dell'edificio - dove vengono posizionate le persone all'interno
