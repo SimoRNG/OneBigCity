@@ -6,7 +6,7 @@ using System.Data;
 
 namespace OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 
-public class SistemaEdifici : ISistemaSimulazione
+public class SistemaEdifici : ISistemaSimulazione, IDisposable
 {
     private readonly EventBus _eventBus;
     public SistemaEdifici(EventBus eventBus) { _eventBus = eventBus; }
@@ -17,6 +17,10 @@ public class SistemaEdifici : ISistemaSimulazione
         GestisciStatoEdifici(citta, buffer);
     }
 
+    public void Dispose()
+    {
+        
+    }
 
     private void ApplicaUsuraEdifici(Citta citta)
     {

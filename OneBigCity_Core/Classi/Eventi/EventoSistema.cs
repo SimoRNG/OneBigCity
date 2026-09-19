@@ -1,6 +1,6 @@
 ﻿namespace OneBigCity_Model.Classi.Eventi;
 
-public class EventoSistema
+public class EventoSistema : EventoLoggatoBase
 {
     // Classe per eventi di carattere log / notifiche
     public string Log { get; }

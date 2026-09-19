@@ -27,7 +27,7 @@ public class EdificioBase : IEntita
     public StatoEdificio Stato { get; set; } = StatoEdificio.Operativo;
     public TipoAccessoEdificio Accesso { get; set; } = TipoAccessoEdificio.Libero;
     public int PercentualeCondizione { get; set; } = 100;
-    public Persona? Proprietario { get; set; } = null;
+    public Guid? Proprietario { get; set; } = null;
     public List<Punto3D> CoordinateAccessiEsterni { get; set; } = new(); // Ingressi calpestabili dall'esterno
     public List<Punto3D> CoordinateOccupate { get; set; } = new(); // Celle della mappa occupate dall'impronta a terra della struttura
     public int CapienzaMassima { get; set; }

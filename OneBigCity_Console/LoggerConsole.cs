@@ -14,6 +14,7 @@ public class LoggerConsole : IDisposable
         _eventBus.Iscrivi<EventoMeteoCambiato>(OnMeteoCambiato);
         _eventBus.Iscrivi<EventoNuovoGiorno>(OnNuovoGiorno);
         _eventBus.Iscrivi<EventoSistema>(OnLogSistema);
+        _eventBus.Iscrivi<EventoCitta>(OnEventoCitta);
 
     }
 
@@ -22,6 +23,8 @@ public class LoggerConsole : IDisposable
         _eventBus.Disiscrivi<EventoMeteoCambiato>(OnMeteoCambiato);
         _eventBus.Disiscrivi<EventoNuovoGiorno>(OnNuovoGiorno);
         _eventBus.Disiscrivi<EventoSistema>(OnLogSistema);
+        _eventBus.Disiscrivi<EventoCitta>(OnEventoCitta);
+
     }
 
     private void OnLogSistema(EventoSistema e)
@@ -42,6 +45,13 @@ public class LoggerConsole : IDisposable
     {
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine($"[TEMPO] NUOVO GIORNO SIMULAZIONE: {e.DataCorrente:yyyy-MM-dd}");
+        Console.ResetColor();
+    }
+
+    private void OnEventoCitta(EventoCitta e)
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"[CITTA'] : [{e.DataOraCitta}] {e.Log}");
         Console.ResetColor();
     }
 }

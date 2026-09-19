@@ -12,6 +12,8 @@ public static class AlgoritmiPathFinding
         (-1, 0)  // Ovest
     };
 
+
+    #region BFS
     public static Punto3D CercaPrimaCellaCalpestabileBFS(MappaGriglia mappa, CellaGriglia partenza)
     {
         return CercaPrimaCellaCalpestabileBFS(mappa, partenza.Posizione);
@@ -58,4 +60,8 @@ public static class AlgoritmiPathFinding
         // Fallback
         return new Punto3D(0, 0, 0);
     }
+
+    #endregion
+
+    
 }
