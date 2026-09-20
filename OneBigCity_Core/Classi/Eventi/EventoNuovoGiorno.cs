@@ -3,7 +3,7 @@
 /// <summary>
 /// Evento pubblicato sul bus ogni volta che la simulazione avanza di un giorno
 /// </summary>
-public class EventoNuovoGiorno
+public class EventoNuovoGiorno : EventoLoggatoBase
 {
     public DateTime DataCorrente { get; }
 
