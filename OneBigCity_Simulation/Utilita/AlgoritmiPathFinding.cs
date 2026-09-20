@@ -63,5 +63,13 @@ public static class AlgoritmiPathFinding
 
     #endregion
 
-    
+
+    #region A*
+    public static List<Punto3D> A_Star(MappaGriglia mappa, Punto3D partenza, Punto3D destinazione)
+    {
+
+    }
+    #endregion
+
+
 }
