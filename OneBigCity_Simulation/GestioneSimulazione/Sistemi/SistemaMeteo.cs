@@ -47,7 +47,7 @@ public class SistemaMeteo : ISistemaSimulazione, IDisposable
         CalcolaMeteoGiornaliero(e.DataCorrente.Date);
     }
 
-    public void Aggiorna(DateTime orarioCorrente, Citta citta, CommandBuffer buffer)
+    public void Aggiorna(ContestoTick contesto, CommandBuffer buffer)
     {
         // Ricalcoliamo il meteo solo quando cambia il giorno solare
         // Il meteo non dipende dalla città

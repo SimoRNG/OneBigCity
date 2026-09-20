@@ -19,14 +19,14 @@ public class SistemaAgenti : ISistemaSimulazione, IDisposable
 
     }
 
-    public void Aggiorna(DateTime orarioCorrente, Citta citta, CommandBuffer buffer)
+    public void Aggiorna(ContestoTick contesto, CommandBuffer buffer)
     {
         // Logica iniziale base - gli agenti alle ore 8 vanno verso il primo luogo industriale della lista edifici della città
         // alle 17 invece tornano a casa (se ce l'hanno)
         // Per le persone che hanno raggiunto la destinazione provo a farle entrare
 
-        GestisciSaluteAgenti(orarioCorrente, citta);
-        GestisciIntenzioniAgenti(orarioCorrente, citta, buffer);
+        GestisciSaluteAgenti(contesto.OrarioCorrente, contesto.Citta, buffer);
+        GestisciIntenzioniAgenti(contesto.OrarioCorrente, contesto.Citta, buffer);
 
     }
 
@@ -64,11 +64,13 @@ public class SistemaAgenti : ISistemaSimulazione, IDisposable
         }
     }
 
-    private void GestisciSaluteAgenti(DateTime orarioCorrente, Citta citta)
+    private void GestisciSaluteAgenti(DateTime orarioCorrente, Citta citta, CommandBuffer buffer)
     {
         // Elimino over 80 anni
-        int rimossi = citta.Abitanti.RemoveAll(a => a.CalcolaEta(orarioCorrente) > 80);
+        var daRimuovere = citta.Abitanti.Where(a => a.CalcolaEta(orarioCorrente) > 80).ToList();
 
-        if (rimossi > 0) _eventBus.Pubblica(new EventoCitta(orarioCorrente, $"Sono stati rimossi {rimossi.ToString()} abitanti!"));
+        foreach (Persona anziano in daRimuovere) buffer.Aggiungi(new ComandoEliminaPersona(anziano.ID));
+
+        if (daRimuovere.Count > 0) _eventBus.Pubblica(new EventoCitta(orarioCorrente, $"Sono stati rimossi {daRimuovere.Count.ToString()} abitanti!"));
     }
 }

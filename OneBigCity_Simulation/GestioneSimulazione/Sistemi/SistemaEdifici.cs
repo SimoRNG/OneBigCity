@@ -11,10 +11,10 @@ public class SistemaEdifici : ISistemaSimulazione, IDisposable
     private readonly EventBus _eventBus;
     public SistemaEdifici(EventBus eventBus) { _eventBus = eventBus; }
 
-    public void Aggiorna(DateTime orarioCorrente, Citta citta, CommandBuffer buffer)
+    public void Aggiorna(ContestoTick contesto, CommandBuffer buffer)
     {
-        ApplicaUsuraEdifici(citta);
-        GestisciStatoEdifici(citta, buffer);
+        ApplicaUsuraEdifici(contesto.Citta,buffer);
+        GestisciStatoEdifici(contesto.Citta, buffer);
     }
 
     public void Dispose()
@@ -22,7 +22,7 @@ public class SistemaEdifici : ISistemaSimulazione, IDisposable
         
     }
 
-    private void ApplicaUsuraEdifici(Citta citta)
+    private void ApplicaUsuraEdifici(Citta citta, CommandBuffer buffer)
     {
         // 10% di possibilità di peggiorare la condizione degli edifici
 
@@ -31,7 +31,7 @@ public class SistemaEdifici : ISistemaSimulazione, IDisposable
         foreach (var edificio in edificiUsirabili)
         {
             if (OneBigCity_Model.Classi.Static.Utilita.RNG(1, 100) <= 10)
-                edificio.PercentualeCondizione -= 1;
+                buffer.Aggiungi(new ComandoVariaCondizioneEdificio(edificio.ID, -1));
         }
     }
 

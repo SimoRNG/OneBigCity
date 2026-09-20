@@ -11,7 +11,7 @@ public class Abitazione : EdificioBase
         this.CapienzaMassima = 5;
     }
 
-    public void ImpostaProprietario(Persona nuovoProprietario)
+    public void ImpostaProprietario(Guid nuovoProprietario)
     {
         this.Proprietario = nuovoProprietario;
     }

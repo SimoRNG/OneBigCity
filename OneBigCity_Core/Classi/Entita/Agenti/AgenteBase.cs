@@ -9,5 +9,7 @@ public abstract class AgenteBase
 {
     public Guid ID { get; set; } = Guid.NewGuid();
     public Punto3D Posizione { get; set; } = new(0, 0, 0);
+    public bool PuoMuoversi { get; set; } = true;
+
 
 }
