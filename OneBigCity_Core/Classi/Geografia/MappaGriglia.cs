@@ -94,4 +94,25 @@ public class MappaGriglia
         _strati[z][x, y] = new CellaGriglia(pos, tipo, calpestabile);
         return true;
     }
+
+    public IEnumerable<CellaGriglia> GetVicini(CellaGriglia cella)
+    {
+        // Direzioni
+        int[] dx = { 0, 0, -1, 1 };
+        int[] dy = { -1, 1, 0, 0 };
+
+        for (int i = 0; i < 4; i++)
+        {
+            int nx = cella.Posizione.X + dx[i];
+            int ny = cella.Posizione.Y + dy[i];
+            int z = cella.Posizione.Z; // TODO - per il momento mi tengo sullo stesso piano z, da cambiare poi
+
+            CellaGriglia? vicina = OttieniCella(new Punto3D(nx, ny, z));
+
+            if (vicina != null && vicina.IsCalpestabile)
+            {
+                yield return vicina;
+            }
+        }
+    }
 }
