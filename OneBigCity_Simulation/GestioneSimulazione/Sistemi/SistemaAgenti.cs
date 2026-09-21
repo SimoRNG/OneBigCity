@@ -58,7 +58,7 @@ public class SistemaAgenti : ISistemaSimulazione, IDisposable
 
                 if (orarioCorrente.TimeOfDay == new TimeSpan(8, 0, 0) || orarioCorrente.TimeOfDay == new TimeSpan(17, 0, 0))
                 {
-                    buffer.Aggiungi(new ComandoRichiediMovimento(abitante.ID, destinazione));
+                    buffer.Aggiungi(new ComandoMuovi(abitante.ID, destinazione));
                 }
             }
         }
