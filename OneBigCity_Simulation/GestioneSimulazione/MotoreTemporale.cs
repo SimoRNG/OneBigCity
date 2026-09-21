@@ -7,7 +7,7 @@ public class MotoreTemporale
     private readonly EventBus _eventBus;
     private CancellationTokenSource? _cts;
 
-    public DateTime DataCorrente { get; private set; }
+    public DateTime DataOraCorrente { get; private set; }
     public TimeSpan StepTemporale { get; set; }
     public int IntervalloTickMs { get; set; } = 1000; // Intervallo reale tra i tick (es. 1 secondo reale)
     public bool IsInEsecuzione { get; private set; }
@@ -17,7 +17,7 @@ public class MotoreTemporale
     public MotoreTemporale(EventBus eventBus, DateTime dataInizio, TimeSpan? stepTemporale = null)
     {
         _eventBus = eventBus;
-        DataCorrente = dataInizio;
+        DataOraCorrente = dataInizio;
         StepTemporale = stepTemporale ?? TimeSpan.FromDays(1); // Default 1 giorno, modificabile in seguito
         IsInEsecuzione = false;
     }
@@ -43,13 +43,18 @@ public class MotoreTemporale
     {
         while (!token.IsCancellationRequested)
         {
-            DataCorrente = DataCorrente.Add(StepTemporale);
+            DataOraCorrente = DataOraCorrente.Add(StepTemporale);
 
-            if (DataCorrente.Day == 1 && DataCorrente.Month == 1) _eventBus.Pubblica(new EventoSistema("E' iniziato un nuovo anno!"));
+            if (DataOraCorrente.Day == 1 && DataOraCorrente.Month == 1 
+                && DataOraCorrente.Hour == 0 && DataOraCorrente.Minute == 0
+                && DataOraCorrente.Second == 0) _eventBus.Pubblica(new EventoSistema("E' iniziato un nuovo anno!"));
 
-            _eventBus.Pubblica(new EventoNuovoGiorno(DataCorrente));
+            if (DataOraCorrente.TimeOfDay == new TimeSpan(0, 0, 0)) _eventBus.Pubblica(new EventoNuovoGiorno(DataOraCorrente));
 
-            OnTick?.Invoke(DataCorrente);
+            //debug
+            _eventBus.Pubblica(new EventoSistema("Ora corrente: " + DataOraCorrente.ToShortTimeString()));
+
+            OnTick?.Invoke(DataOraCorrente);
 
             // Attesa reale tra un tick e l'altro
             try

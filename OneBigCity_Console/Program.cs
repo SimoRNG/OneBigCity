@@ -23,7 +23,7 @@ var orchestratore = new OrchestratoreSistemi(cittaCorrente);
 RegistraSistemi(eventBus, orchestratore);
 // -----
 
-var motoreTemporale = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1), TimeSpan.FromDays(1)); // 1 giorno per tick
+var motoreTemporale = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1), TimeSpan.FromMinutes(60)); // 1 ora per tick
 motoreTemporale.OnTick += orchestratore.EseguiTick;
 
 
