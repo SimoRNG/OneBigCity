@@ -42,4 +42,8 @@ public class EdificioBase : IEntita
     public MappaGriglia PlanimetriaInterna { get; set; } = new(5,5,0,0); // Mappa interna dell'edificio - dove vengono posizionate le persone all'interno
     public List<Punto3D> CoordinateAccessiInterni { get; set; } = new(); // Punti sulla griglia interna per uscire dall'edificio
 
+    public void ImpostaProprietario(Guid nuovoProprietario)
+    {
+        this.Proprietario = nuovoProprietario;
+    }
 }
