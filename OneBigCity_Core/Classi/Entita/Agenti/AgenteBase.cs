@@ -12,7 +12,7 @@ public abstract class AgenteBase
 
     // --- Movimento ---
     public bool PuoMuoversi { get; set; } = true;
-    public List<Punto3D> Percorso { get; set; } = new();
+    public List<CellaGriglia> Percorso { get; set; } = new();
     public int IndiceStepPercorso = -1;
 
 

@@ -35,8 +35,13 @@ public class SistemaAgenti : ISistemaSimulazione, IDisposable
         if (citta.Abitanti.Count == 0 || citta.Edifici.Count == 0) return;
 
         List<Persona> listaAbitanti = citta.Abitanti.ToList();
-        List<EdificioBase> listaLuoghiIndustriali = citta.Edifici.Where(e => e.Tipo == TipoEdificio.Industriale).ToList();
-        List<EdificioBase> listaAbitazioni = citta.Edifici.Where(e2 => e2.Tipo == TipoEdificio.Residenziale).ToList();
+        List<EdificioBase> listaLuoghiIndustriali = citta.Edifici
+                                            .Where(e => (e is Industria || e.Tipo == TipoEdificio.Industriale) && e.CoordinateAccessiEsterni.Count > 0)
+                                            .ToList();
+
+        List<EdificioBase> listaAbitazioni = citta.Edifici
+                                            .Where(e => (e is Abitazione || e.Tipo == TipoEdificio.Residenziale) && e.CoordinateAccessiEsterni.Count > 0)
+                                            .ToList();
 
         TimeSpan orario = orarioCorrente.TimeOfDay;
 
@@ -47,19 +52,20 @@ public class SistemaAgenti : ISistemaSimulazione, IDisposable
                 Punto3D destinazione = new();
                 if (orario.Hours == 8)
                 {
-                    destinazione = listaLuoghiIndustriali[0].CoordinateAccessiEsterni[0];
+                    if (listaLuoghiIndustriali.Count > 0) destinazione = listaLuoghiIndustriali[0].CoordinateAccessiEsterni[0];
                 }
                 else
                 {
-                    EdificioBase? casa = listaAbitazioni.Where(a => a.Proprietario == abitante.ID).FirstOrDefault();
-                    if (casa != null) destinazione = casa.CoordinateAccessiEsterni[0];
+                    EdificioBase? casa = listaAbitazioni.FirstOrDefault(a => a.Proprietario == abitante.ID);
+                    if (casa != null && casa.CoordinateAccessiEsterni.Count > 0)
+                    {
+                        destinazione = casa.CoordinateAccessiEsterni[0];
+                    }
                 }
                 if (destinazione == new Punto3D()) continue;
 
-                if (orarioCorrente.TimeOfDay == new TimeSpan(8, 0, 0) || orarioCorrente.TimeOfDay == new TimeSpan(17, 0, 0))
-                {
-                    buffer.Aggiungi(new ComandoRichiediMovimento(abitante.ID, destinazione));
-                }
+                buffer.Aggiungi(new ComandoMuovi(abitante.ID, destinazione));
+                _eventBus.Pubblica(new EventoCitta(orarioCorrente, $"{abitante.Nome} è diretto verso {destinazione}"));
             }
         }
     }

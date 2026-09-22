@@ -81,8 +81,10 @@ public static class AlgoritmiPathFinding
             Padre = null;
         }
     }
-    public static List<CellaGriglia>? A_Star(MappaGriglia mappa, CellaGriglia partenza, CellaGriglia destinazione)
+    public static List<CellaGriglia>? A_Star(MappaGriglia mappa, CellaGriglia? partenza, CellaGriglia? destinazione)
     {
+        if (partenza == null || destinazione == null) return null;
+
         if (!partenza.IsCalpestabile || !destinazione.IsCalpestabile)
             return null;
 

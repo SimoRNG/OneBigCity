@@ -14,12 +14,13 @@ public record ComandoMuovi(Guid idAgente, Punto3D destinazione) : IComandoSimula
         if (agente == null || !agente.PuoMuoversi) return;
         if (agente.Posizione == destinazione) return;
 
-        List<Punto3D> nuovoPercorso = AlgoritmiPathFinding.A_Star(
+        List<CellaGriglia>? nuovoPercorso = AlgoritmiPathFinding.A_Star(
             citta.Mappa,
-            agente.Posizione,
-            destinazione
+            citta.Mappa.OttieniCella(agente.Posizione),
+            citta.Mappa.OttieniCella(destinazione)
         );
 
+        if(nuovoPercorso == null) return;
 
         if (nuovoPercorso.Count > 0)
         {

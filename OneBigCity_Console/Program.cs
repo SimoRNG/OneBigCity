@@ -23,7 +23,7 @@ var orchestratore = new OrchestratoreSistemi(cittaCorrente);
 RegistraSistemi(eventBus, orchestratore);
 // -----
 
-var motoreTemporale = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1), TimeSpan.FromDays(1)); // 1 giorno per tick
+var motoreTemporale = new MotoreTemporale(eventBus, new DateTime(2026, 1, 1), TimeSpan.FromMinutes(60)); // 1 ora per tick
 motoreTemporale.OnTick += orchestratore.EseguiTick;
 
 
@@ -69,11 +69,18 @@ void RegistraSistemi(EventBus eventBus, OrchestratoreSistemi orchestratore)
 
     var sistemaMeteo = new SistemaMeteo(eventBus, new(TipoMeteo.Sereno, 25));
     var sistemaEdifici = new SistemaEdifici(eventBus);
+    var sistemaAgenti = new SistemaAgenti(eventBus);
+    var sistemaMovimento = new SistemaMovimento(eventBus);
 
     orchestratore.RegistraSistema(sistemaMeteo);
     eventBus.Pubblica(new EventoSistema("Sistema meteo registrato."));
     orchestratore.RegistraSistema(sistemaEdifici);
     eventBus.Pubblica(new EventoSistema("Sistema edifici registrato."));
+    orchestratore.RegistraSistema(sistemaAgenti);
+    eventBus.Pubblica(new EventoSistema("Sistema agenti registrato."));
+    orchestratore.RegistraSistema(sistemaMovimento);
+    eventBus.Pubblica(new EventoSistema("Sistema movimento registrato."));
+
 }
 
 Citta CaricaCitta()
