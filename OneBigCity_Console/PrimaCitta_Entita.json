@@ -1,79 +1,162 @@
 {
   "Edifici": [
     {
+      "$type": "Industria",
+      "Nome": "Fabbrica Est",
+      "Descrizione": "Stabilimento industriale",
+      "PercentualeCondizione": 100,
+      "CapienzaMassima": 20,
+      "CoordinateOccupate": [
+        {
+          "X": 8,
+          "Y": 8,
+          "Z": 0
+        }
+      ],
+      "CoordinateAccessiEsterni": [
+        {
+          "X": 7,
+          "Y": 8,
+          "Z": 0
+        }
+      ]
+    },
+    {
       "$type": "Abitazione",
       "Nome": "Casa Ovest Nord",
+      "Proprietario": "3a27c8b7-de83-43d6-9acc-1db64b9b43cc",
       "Descrizione": "Abitazione situata a nord-ovest del fiume",
       "PercentualeCondizione": 100,
       "CapienzaMassima": 5,
       "CoordinateOccupate": [
-        { "X": 3, "Y": 1, "Z": 0 }
+        {
+          "X": 3,
+          "Y": 1,
+          "Z": 0
+        }
       ],
-      "CoordinateIngressi": [
-        { "X": 3, "Y": 2, "Z": 0 }
+      "CoordinateAccessiEsterni": [
+        {
+          "X": 3,
+          "Y": 2,
+          "Z": 0
+        }
       ]
     },
     {
       "$type": "Abitazione",
       "Nome": "Casa Est Nord",
+      "Proprietario": "a64a9c5f-9d7a-4254-88ee-70b0be5954c4",
       "Descrizione": "Abitazione situata a nord-est del fiume",
       "PercentualeCondizione": 100,
       "CapienzaMassima": 5,
       "CoordinateOccupate": [
-        { "X": 8, "Y": 1, "Z": 0 }
+        {
+          "X": 8,
+          "Y": 1,
+          "Z": 0
+        }
       ],
-      "CoordinateIngressi": [
-        { "X": 8, "Y": 2, "Z": 0 }
+      "CoordinateAccessiEsterni": [
+        {
+          "X": 8,
+          "Y": 2,
+          "Z": 0
+        }
       ]
     },
     {
       "$type": "Abitazione",
       "Nome": "Casa Ovest Sud",
+      "Proprietario": "e6106017-140a-4d05-8244-784a34a632de",
       "Descrizione": "Abitazione situata a sud-ovest vicina alla rampa/acqua",
       "PercentualeCondizione": 100,
       "CapienzaMassima": 5,
       "CoordinateOccupate": [
-        { "X": 3, "Y": 7, "Z": 0 }
+        {
+          "X": 3,
+          "Y": 7,
+          "Z": 0
+        }
       ],
-      "CoordinateIngressi": [
-        { "X": 3, "Y": 6, "Z": 0 }
+      "CoordinateAccessiEsterni": [
+        {
+          "X": 3,
+          "Y": 6,
+          "Z": 0
+        }
       ]
     },
     {
       "$type": "Abitazione",
       "Nome": "Casa Est Sud",
+      "Proprietario": "e6106017-140a-4d05-8244-784a34a632de",
       "Descrizione": "Abitazione situata a sud-est",
       "PercentualeCondizione": 100,
       "CapienzaMassima": 5,
       "CoordinateOccupate": [
-        { "X": 7, "Y": 8, "Z": 0 }
+        {
+          "X": 7,
+          "Y": 8,
+          "Z": 0
+        }
       ],
-      "CoordinateIngressi": [
-        { "X": 7, "Y": 7, "Z": 0 }
+      "CoordinateAccessiEsterni": [
+        {
+          "X": 7,
+          "Y": 7,
+          "Z": 0
+        }
       ]
     }
   ],
   "Persone": [
     {
+      "ID": "e6106017-140a-4d05-8244-784a34a632de",
       "Nome": "Mario",
       "Cognome": "Rossi",
       "Sesso": "Maschio",
       "DataNascita": "1990-05-15T00:00:00",
-      "Posizione": { "X": 3, "Y": 2, "Z": 0 }
+      "Posizione": {
+        "X": 3,
+        "Y": 2,
+        "Z": 0
+      }
     },
     {
+      "ID": "3a27c8b7-de83-43d6-9acc-1db64b9b43cc",
       "Nome": "Lucia",
       "Cognome": "Verdi",
       "Sesso": "Femmina",
       "DataNascita": "1994-08-22T00:00:00",
-      "Posizione": { "X": 5, "Y": 1, "Z": 0 }
+      "Posizione": {
+        "X": 5,
+        "Y": 1,
+        "Z": 0
+      }
     },
     {
+      "ID": "a64a9c5f-9d7a-4254-88ee-70b0be5954c4",
       "Nome": "Giuseppe",
       "Cognome": "Bianchi",
       "Sesso": "Maschio",
       "DataNascita": "1985-12-03T00:00:00",
-      "Posizione": { "X": 12, "Y": 5, "Z": 0 }
+      "Posizione": {
+        "X": 12,
+        "Y": 5,
+        "Z": 0
+      }
+    },
+    {
+      "Nome": "Marco",
+      "Cognome": "Neri",
+      "Sesso": "Maschio",
+      "DataNascita": "1984-12-03T00:00:00",
+      "Posizione": {
+        "X": 11,
+        "Y": 5,
+        "Z": 0
+      }
     }
   ]
 }

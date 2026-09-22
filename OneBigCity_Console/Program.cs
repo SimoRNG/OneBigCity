@@ -69,11 +69,18 @@ void RegistraSistemi(EventBus eventBus, OrchestratoreSistemi orchestratore)
 
     var sistemaMeteo = new SistemaMeteo(eventBus, new(TipoMeteo.Sereno, 25));
     var sistemaEdifici = new SistemaEdifici(eventBus);
+    var sistemaAgenti = new SistemaAgenti(eventBus);
+    var sistemaMovimento = new SistemaMovimento(eventBus);
 
     orchestratore.RegistraSistema(sistemaMeteo);
     eventBus.Pubblica(new EventoSistema("Sistema meteo registrato."));
     orchestratore.RegistraSistema(sistemaEdifici);
     eventBus.Pubblica(new EventoSistema("Sistema edifici registrato."));
+    orchestratore.RegistraSistema(sistemaAgenti);
+    eventBus.Pubblica(new EventoSistema("Sistema agenti registrato."));
+    orchestratore.RegistraSistema(sistemaMovimento);
+    eventBus.Pubblica(new EventoSistema("Sistema movimento registrato."));
+
 }
 
 Citta CaricaCitta()

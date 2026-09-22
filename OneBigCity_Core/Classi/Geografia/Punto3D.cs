@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace OneBigCity_Model.Classi.Geografia;
 
@@ -10,6 +11,7 @@ public readonly struct Punto3D : IEquatable<Punto3D>
     public int Y { get; }
     public int Z { get; }
 
+    [JsonConstructor]
     public Punto3D(int x = 0, int y = 0, int z = 0)
     {
         X = x;

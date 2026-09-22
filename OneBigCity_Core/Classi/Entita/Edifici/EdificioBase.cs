@@ -11,6 +11,7 @@ namespace OneBigCity_Model.Classi.Entita.Edifici;
 /// </summary>
 
 [JsonDerivedType(typeof(Abitazione), typeDiscriminator: "Abitazione")]
+[JsonDerivedType(typeof(Industria), typeDiscriminator: "Industria")]
 public class EdificioBase : IEntita
 {
     public EdificioBase() { }
@@ -23,6 +24,8 @@ public class EdificioBase : IEntita
     public Guid ID { get; set; } = Guid.NewGuid();
     public string Nome { get; set; } = "";
     public string Descrizione { get; set; } = "";
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TipoEdificio Tipo { get; set; } = TipoEdificio.Non_Specificato;
     public StatoEdificio Stato { get; set; } = StatoEdificio.Operativo;
     public TipoAccessoEdificio Accesso { get; set; } = TipoAccessoEdificio.Libero;
