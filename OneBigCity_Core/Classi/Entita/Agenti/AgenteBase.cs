@@ -1,4 +1,5 @@
-﻿using OneBigCity_Model.Classi.Geografia;
+﻿using OneBigCity_Model.Classi.Entita.EnumEntita;
+using OneBigCity_Model.Classi.Geografia;
 using System.Text.Json.Serialization;
 
 namespace OneBigCity_Model.Classi.Entita.Agenti;
@@ -9,6 +10,9 @@ public abstract class AgenteBase
 {
     public Guid ID { get; set; } = Guid.NewGuid();
     public Punto3D Posizione { get; set; } = new(0, 0, 0);
+
+
+    public Dictionary<Bisogno, int> Bisogni = new(); // Chiave: Bisogno - Valore: Percentuale soddisfamento
 
     // --- Movimento ---
     public bool PuoMuoversi { get; set; } = true;
