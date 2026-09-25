@@ -17,6 +17,12 @@ public enum Bisogno
     Relax
 }
 
+public enum Risorsa
+{
+    Denaro,
+    Cibo
+}
+
 public enum SpecieAnimale
 {
     NonDefinita,

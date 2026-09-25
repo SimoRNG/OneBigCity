@@ -10,6 +10,7 @@ public class OrchestratoreSistemi : IDisposable
     private readonly List<ISistemaSimulazione> _sistemi = new();
     public Citta Citta { get; set; }
     private readonly CommandBuffer _commandBuffer = new();
+    private DateTime? _ultimoOrario;
 
     public OrchestratoreSistemi(Citta citta)
     {
@@ -28,11 +29,17 @@ public class OrchestratoreSistemi : IDisposable
 
     public void EseguiTick(DateTime orarioCorrente)
     {
-        // Aggiorno i sistemi
-
         if (Citta == null) return;
 
-        var contesto = new ContestoTick(orarioCorrente, Citta);
+        // Secondi passati dall'ultimo tick
+        double deltaTempoSecondi = 1.0;
+        if (_ultimoOrario.HasValue)
+        {
+            deltaTempoSecondi = (orarioCorrente - _ultimoOrario.Value).TotalSeconds;
+        }
+        _ultimoOrario = orarioCorrente;
+
+        var contesto = new ContestoTick(orarioCorrente, Citta, deltaTempoSecondi);
 
         foreach (var sistema in _sistemi)
         {

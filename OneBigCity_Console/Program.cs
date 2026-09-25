@@ -1,7 +1,12 @@
 ﻿using OneBigCity_Console;
+using OneBigCity_Model.AutonomiaCitta.Obiettivi;
 using OneBigCity_Model.Classi.Entita;
 using OneBigCity_Model.Classi.Eventi;
 using OneBigCity_Model.Classi.Meteo.EnumMeteo;
+using OneBigCity_Simulation.GestioneSimulazione.AutonomiaCitta.Azioni;
+using OneBigCity_Simulation.GestioneSimulazione.Azioni;
+using OneBigCity_Simulation.GestioneSimulazione.GestioneAgenti;
+using OneBigCity_Simulation.GestioneSimulazione.Obiettivi;
 using OneBigCity_Simulation.GestioneSimulazione.Sistemi;
 using OneBigCity_Simulation.Motori;
 using OneBigCity_Simulation.Stato;
@@ -67,9 +72,12 @@ return 0;
 void RegistraSistemi(EventBus eventBus, OrchestratoreSistemi orchestratore)
 {
 
+    var gestoreUtility = new GestoreUtilityAgenti(GetObiettiviDisponibili());
+    var azioniDisponibili = GetAzioniDisponibili();
+
     var sistemaMeteo = new SistemaMeteo(eventBus, new(TipoMeteo.Sereno, 25));
     var sistemaEdifici = new SistemaEdifici(eventBus);
-    var sistemaAgenti = new SistemaAgenti(eventBus);
+    var sistemaAgenti = new SistemaAgenti(eventBus, gestoreUtility, azioniDisponibili);
     var sistemaMovimento = new SistemaMovimento(eventBus);
 
     orchestratore.RegistraSistema(sistemaMeteo);
@@ -82,6 +90,23 @@ void RegistraSistemi(EventBus eventBus, OrchestratoreSistemi orchestratore)
     eventBus.Pubblica(new EventoSistema("Sistema movimento registrato."));
 
 }
+
+List<ObiettivoGOAP> GetObiettiviDisponibili()
+{
+    return new()
+    {
+        new ObiettivoSoddisfaFame()
+    };
+}
+
+List<AzioneGOAP> GetAzioniDisponibili()
+{
+    return new()
+    {
+        new AzioneMangia()
+    };
+}
+
 
 Citta CaricaCitta()
 {

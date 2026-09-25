@@ -51,7 +51,7 @@ public class LoggerConsole : IDisposable
     private void OnEventoCitta(EventoCitta e)
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"[CITTA'] : [{e.DataOraCitta}] {e.Log}");
+        Console.WriteLine($"[CITTA'] [{e.DataOraCitta}] {e.Log}");
         Console.ResetColor();
     }
 }

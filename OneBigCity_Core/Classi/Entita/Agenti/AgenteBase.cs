@@ -1,5 +1,6 @@
 ﻿using OneBigCity_Model.Classi.Entita.EnumEntita;
 using OneBigCity_Model.Classi.Geografia;
+using OneBigCity_Model.Interfacce;
 using System.Text.Json.Serialization;
 
 namespace OneBigCity_Model.Classi.Entita.Agenti;
@@ -12,12 +13,15 @@ public abstract class AgenteBase
     public Punto3D Posizione { get; set; } = new(0, 0, 0);
 
 
-    public Dictionary<Bisogno, int> Bisogni = new(); // Chiave: Bisogno - Valore: Percentuale soddisfamento
+    public Dictionary<Bisogno, double> Bisogni = new(); // Chiave: Bisogno - Valore: Percentuale soddisfamento
 
     // --- Movimento ---
     public bool PuoMuoversi { get; set; } = true;
     public List<CellaGriglia> Percorso { get; set; } = new();
     public int IndiceStepPercorso = -1;
 
-
+    // --- Piano d'esecuzione ---
+    public Queue<IAzioneGOAP> PianoCorrente { get; set; } = new(); // Lista ordinata di operazioni da eseguire
+    public IAzioneGOAP? AzioneInEsecuzione { get; set; }
+    public IObiettivoGOAP? ObiettivoCorrente { get; set; }
 }

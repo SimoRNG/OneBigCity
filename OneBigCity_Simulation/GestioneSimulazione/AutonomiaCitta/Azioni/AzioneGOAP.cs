@@ -1,0 +1,52 @@
+﻿using OneBigCity_Model.Classi.Entita;
+using OneBigCity_Model.Classi.Entita.Agenti;
+using OneBigCity_Model.Interfacce;
+using OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;
+
+namespace OneBigCity_Simulation.GestioneSimulazione.Azioni;
+
+
+public abstract class AzioneGOAP : IAzioneGOAP
+{
+    public string Nome { get; protected set; } = "AzioneGenerica";
+    public Dictionary<string, object> Precondizioni { get; set; } = new();
+    public Dictionary<string, object> Effetti { get; set; } = new();
+    public double Costo { get; set; }
+    public long DurataInSecondiSimulazione { get; set; }
+    public StatoAzione Stato { get; set; }
+
+    public abstract bool VerificAPrecondizioni(AgenteBase agente, Citta citta);
+    public abstract void Aggiorna(AgenteBase agente, ContestoTick contesto, CommandBuffer buffer);
+
+
+    public virtual void Inizia(AgenteBase agente, Citta citta, CommandBuffer buffer)
+    {
+        Stato = StatoAzione.InCorso;
+    }
+
+    public virtual void Termina(AgenteBase agente, Citta citta, CommandBuffer buffer)
+    {
+        Stato = StatoAzione.Completata;
+    }
+
+    public virtual void Annulla(AgenteBase agente)
+    {
+        Stato = StatoAzione.Fallita;
+    }
+
+    public virtual void Sospendi(AgenteBase agente)
+    {
+        Stato = StatoAzione.Sospesa;
+    }
+}
+
+public enum StatoAzione
+{
+    NonIniziata,
+    InCorso,
+    Sospesa,
+    Completata,
+    Fallita
+}
+
+
