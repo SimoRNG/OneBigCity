@@ -3,9 +3,6 @@ using OneBigCity_Model.Classi.Entita.Agenti;
 using OneBigCity_Model.Classi.Entita.EnumEntita;
 using OneBigCity_Simulation.GestioneSimulazione.Azioni;
 using OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace OneBigCity_Simulation.GestioneSimulazione.AutonomiaCitta.Azioni;
 
