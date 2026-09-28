@@ -6,7 +6,7 @@ using OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;
 namespace OneBigCity_Simulation.GestioneSimulazione.Azioni;
 
 
-public abstract class AzioneGOAP : IAzioneGOAP
+public abstract class AzioneGOAP : IAzioneGOAP, ICloneable
 {
     public string Nome { get; protected set; } = "AzioneGenerica";
     public Dictionary<string, object> Precondizioni { get; set; } = new();
@@ -15,7 +15,7 @@ public abstract class AzioneGOAP : IAzioneGOAP
     public long DurataInSecondiSimulazione { get; set; }
     public StatoAzione Stato { get; set; }
 
-    public abstract bool VerificAPrecondizioni(AgenteBase agente, Citta citta);
+    public abstract bool VerificaPrecondizioni(AgenteBase agente, Citta citta);
     public abstract void Aggiorna(AgenteBase agente, ContestoTick contesto, CommandBuffer buffer);
 
 
@@ -37,6 +37,13 @@ public abstract class AzioneGOAP : IAzioneGOAP
     public virtual void Sospendi(AgenteBase agente)
     {
         Stato = StatoAzione.Sospesa;
+    }
+
+    public object Clone()
+    {
+        var copia = (AzioneGOAP)this.MemberwiseClone();
+        copia.Stato = StatoAzione.NonIniziata;
+        return copia;
     }
 }
 

@@ -13,12 +13,13 @@ public abstract class AgenteBase
     public Punto3D Posizione { get; set; } = new(0, 0, 0);
 
 
-    public Dictionary<Bisogno, double> Bisogni = new(); // Chiave: Bisogno - Valore: Percentuale soddisfamento
+    public Dictionary<Bisogno, double> Bisogni { get; set; } = new(); // Chiave: Bisogno - Valore: Percentuale soddisfamento
+    public Dictionary<Risorsa, double> Inventario { get; set; } = new();
 
     // --- Movimento ---
     public bool PuoMuoversi { get; set; } = true;
     public List<CellaGriglia> Percorso { get; set; } = new();
-    public int IndiceStepPercorso = -1;
+    public int IndiceStepPercorso { get; set; } = -1;
 
     // --- Piano d'esecuzione ---
     public Queue<IAzioneGOAP> PianoCorrente { get; set; } = new(); // Lista ordinata di operazioni da eseguire

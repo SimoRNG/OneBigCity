@@ -32,7 +32,6 @@ public class Persona : AgenteBase, IEntita
     public Sesso Sesso { get; set; }
     public DateTime DataNascita { get; set; }
 
-    public Dictionary<Risorsa, double> Inventario { get; set; } = new();
 
     public int CalcolaEta(DateTime dataCorrenteSimulazione)
     {

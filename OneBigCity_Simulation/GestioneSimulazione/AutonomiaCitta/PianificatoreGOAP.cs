@@ -18,7 +18,7 @@ public class PianificatoreGOAP
 
         // A*
         List<NodoGOAP> openSet = new();
-        HashSet<string> closedSet = new(); 
+        HashSet<string> closedSet = new();
 
         NodoGOAP radice = new NodoGOAP(
             padre: null,
@@ -48,7 +48,7 @@ public class PianificatoreGOAP
             {
                 // Controllo se l'azione è eseguibile dato lo stato corrente del nodo
                 if (SoddisfaPrecondizioni(nodoCorrente.Stato, azione.Precondizioni) &&
-                    azione.VerificAPrecondizioni(agente, citta))
+                    azione.VerificaPrecondizioni(agente, citta))
                 {
 
                     Dictionary<string, object> nuovoStato = ApplicaEffetti(nodoCorrente.Stato, azione.Effetti);
@@ -85,29 +85,16 @@ public class PianificatoreGOAP
     {
         var stato = new Dictionary<string, object>();
 
-        // Bisogni
-        foreach (var bisogno in agente.Bisogni)
+        // Fatti derivati dall'inventario: "ho almeno un'unità di questa risorsa"
+        foreach (Risorsa risorsa in Enum.GetValues<Risorsa>())
         {
-            stato[$"Bisogno_{bisogno.Key}"] = bisogno.Value;
+            agente.Inventario.TryGetValue(risorsa, out double quantita);
+            stato[$"HaRisorsa_{risorsa}"] = quantita > 0;
         }
 
-        // Posizione
-        stato["Posizione"] = agente.Posizione;
-        stato["PuoMuoversi"] = agente.PuoMuoversi;
-
-        // Inventario
-        if (agente is Persona persona)
-        {
-            foreach (var risorsa in persona.Inventario)
-            {
-                stato[$"Risorsa_{risorsa.Key}"] = risorsa.Value;
-            }
-        }
-
-        // Stato del Piano Corrente
+        // Fatti di contesto
         stato["InCasa"] = ControllaSeInCasa(agente, citta);
         stato["InLuogoLavoro"] = ControllaSeInLuogoLavoro(agente, citta);
-
 
         return stato;
     }
@@ -172,7 +159,7 @@ public class PianificatoreGOAP
         Queue<AzioneGOAP> piano = new();
         while (azioniInvertite.Count > 0)
         {
-            piano.Enqueue(azioniInvertite.Pop());
+            piano.Enqueue((AzioneGOAP)azioniInvertite.Pop().Clone());
         }
 
         return piano;

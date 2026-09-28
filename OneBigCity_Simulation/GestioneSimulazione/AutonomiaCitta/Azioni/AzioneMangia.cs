@@ -12,18 +12,22 @@ namespace OneBigCity_Simulation.GestioneSimulazione.AutonomiaCitta.Azioni;
 public class AzioneMangia : AzioneGOAP
 {
     private double _secondiTrascorsi = 0;
-
-    public AzioneMangia()
+    private readonly double _incrementoFame;
+    public AzioneMangia(double incrementoFame)
     {
         Nome = "MangiaCibo";
         Costo = 1.0;
         DurataInSecondiSimulazione = 10; // Dura 10 secondi virtuali
+        _incrementoFame = incrementoFame;
+
+        // PRECONDIZIONI
+        Precondizioni.Add("HaRisorsa_Cibo", true);
 
         // SODDISFA IL GOAL: ObiettivoSoddisfaFame cerca "FameSoddisfatta" = true
         Effetti.Add("FameSoddisfatta", true);
     }
 
-    public override bool VerificAPrecondizioni(AgenteBase agente, Citta citta)
+    public override bool VerificaPrecondizioni(AgenteBase agente, Citta citta)
     {
         return true;
     }
@@ -37,16 +41,17 @@ public class AzioneMangia : AzioneGOAP
     public override void Aggiorna(AgenteBase agente, ContestoTick contesto, CommandBuffer buffer)
     {
         _secondiTrascorsi += contesto.DeltaTempoSecondi;
+        if (_secondiTrascorsi < DurataInSecondiSimulazione) return;
 
-        if (_secondiTrascorsi >= DurataInSecondiSimulazione)
+        // Controllo sull'inventario reale al momento di mangiare
+        if (!agente.Inventario.TryGetValue(Risorsa.Cibo, out double cibo) || cibo < 1)
         {
-            // Ripristina il bisogno della fame nell'agente
-            if (agente.Bisogni.ContainsKey(Bisogno.Fame))
-            {
-                agente.Bisogni[Bisogno.Fame] = 100;
-            }
-
-            Stato = StatoAzione.Completata;
+            Stato = StatoAzione.Fallita;
+            return;
         }
+
+        buffer.Aggiungi(new ComandoVariaInventario(agente.ID, Risorsa.Cibo, -1));
+        buffer.Aggiungi(new ComandoVariaBisogno(agente.ID, Bisogno.Fame, _incrementoFame));
+        Stato = StatoAzione.Completata;
     }
 }

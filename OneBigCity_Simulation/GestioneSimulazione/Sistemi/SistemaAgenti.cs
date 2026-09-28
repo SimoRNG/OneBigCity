@@ -93,13 +93,6 @@ public class SistemaAgenti : ISistemaSimulazione, IDisposable
             }
         }
 
-
-        // DEBUG
-        if (agente is Persona p)
-        {
-            if (p.Nome == "Marco")
-                _eventBus.Pubblica(new EventoCitta(contesto.OrarioCorrente, p.Nome + ". Obiettivo primario: " + agente.ObiettivoCorrente?.ToString()));
-        }
     }
 
     private void GestisciSaluteAgenti(DateTime orarioCorrente, Citta citta, CommandBuffer buffer)

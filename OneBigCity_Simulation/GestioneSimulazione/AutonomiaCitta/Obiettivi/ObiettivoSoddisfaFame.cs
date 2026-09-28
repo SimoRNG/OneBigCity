@@ -12,14 +12,14 @@ public class ObiettivoSoddisfaFame : ObiettivoGOAP
         Nome = "SoddisfaFame";
         StatoDesiderato.Add("FameSoddisfatta", true);
     }
-    public override float CalcolaPriorita(AgenteBase agente, Citta citta)
+    public override double CalcolaPriorita(AgenteBase agente, Citta citta)
     {
         if (agente.Bisogni.TryGetValue(Bisogno.Fame, out double livelloFame))
         {
             // Più la fame è bassa più la priorità dell'obiettivo deve essere alta
-            return (float)(100 - livelloFame);
+            return (double)(100 - livelloFame);
         }
-        return 0f;
+        return 0;
     }
 
     public override bool IsSoddisfatto(AgenteBase agente, Citta citta)

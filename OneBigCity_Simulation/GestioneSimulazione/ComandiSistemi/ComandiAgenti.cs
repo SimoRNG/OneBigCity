@@ -12,16 +12,26 @@ public record ComandoEliminaPersona(Guid idPersona) : IComandoSimulazione
     }
 }
 
-public record ComandoVariaBisogno(Guid idPersona, Bisogno bisogno, double variazione) : IComandoSimulazione
+public record ComandoVariaBisogno(Guid idAgente, Bisogno bisogno, double variazione) : IComandoSimulazione
 {
     public void Esegui(Citta citta)
     {
-        var agente = citta.Abitanti.Where(p => p.ID == idPersona).FirstOrDefault();
-        if (agente is Persona persona)
-        {
-            persona.Bisogni[bisogno] += variazione;
-            if (persona.Bisogni[bisogno] < 0) persona.Bisogni[bisogno] = 0;
-            if (persona.Bisogni[bisogno] > 100) persona.Bisogni[bisogno] = 100;
-        }
+        var agente = citta.Abitanti.FirstOrDefault(p => p.ID == idAgente);
+        if (agente == null) return;
+
+        agente.Bisogni.TryGetValue(bisogno, out double attuale);
+        agente.Bisogni[bisogno] = Math.Clamp(attuale + variazione, 0, 100);
+    }
+}
+
+public record ComandoVariaInventario(Guid idAgente, Risorsa risorsa, double variazione) : IComandoSimulazione
+{
+    public void Esegui(Citta citta)
+    {
+        var agente = citta.Abitanti.FirstOrDefault(p => p.ID == idAgente);
+        if (agente == null) return;
+
+        agente.Inventario.TryGetValue(risorsa, out double attuale);
+        agente.Inventario[risorsa] = Math.Max(0, attuale + variazione);
     }
 }

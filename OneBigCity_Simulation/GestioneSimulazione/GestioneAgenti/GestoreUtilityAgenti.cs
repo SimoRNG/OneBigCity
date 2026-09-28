@@ -30,7 +30,7 @@ public class GestoreUtilityAgenti
             if (obiettivo.IsSoddisfatto(agente, citta))
                 continue;
 
-            float priorita = obiettivo.CalcolaPriorita(agente, citta);
+            double priorita = obiettivo.CalcolaPriorita(agente, citta);
 
             if (priorita > prioritaMassima)
             {

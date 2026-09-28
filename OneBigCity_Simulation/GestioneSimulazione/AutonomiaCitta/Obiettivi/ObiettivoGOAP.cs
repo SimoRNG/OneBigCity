@@ -18,5 +18,5 @@ public abstract class ObiettivoGOAP : IObiettivoGOAP
 
     public abstract bool IsSoddisfatto(AgenteBase agente, Citta citta);
 
-    public abstract float CalcolaPriorita(AgenteBase agente, Citta citta); // Gestita dall'utility
+    public abstract double CalcolaPriorita(AgenteBase agente, Citta citta); // Gestita dall'utility
 }
