@@ -9,7 +9,7 @@ public class MotoreTemporale
 
     public DateTime DataOraCorrente { get; private set; }
     public TimeSpan StepTemporale { get; set; }
-    public int IntervalloTickMs { get; set; } = 1000; // Intervallo reale tra i tick (es. 1 secondo reale)
+    public int IntervalloTickMs { get; set; } = 1000; // Intervallo reale tra i tick
     public bool IsInEsecuzione { get; private set; }
 
     public event Action<DateTime>? OnTick; // Evento scatenato ad ogni tick con la nuova data/ora
@@ -18,7 +18,7 @@ public class MotoreTemporale
     {
         _eventBus = eventBus;
         DataOraCorrente = dataInizio;
-        StepTemporale = stepTemporale ?? TimeSpan.FromDays(1); // Default 1 giorno, modificabile in seguito
+        StepTemporale = stepTemporale ?? TimeSpan.FromDays(1); 
         IsInEsecuzione = false;
     }
 
