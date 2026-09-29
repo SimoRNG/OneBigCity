@@ -16,7 +16,6 @@ public class AzioneCompra : AzioneGOAP, IAzioneGOAP
     public AzioneCompra(Risorsa oggettoAcquisto, double quantitaAcquistata, double costo)
     {
         Nome = $"Acquista_{oggettoAcquisto.ToString()}";
-        Costo = 1.0; // Costo di pianificazione, non denaro
         DurataInSecondiSimulazione = 10; // Dura 10 secondi virtuali
 
         _costoOggetto = costo;
@@ -45,6 +44,17 @@ public class AzioneCompra : AzioneGOAP, IAzioneGOAP
         buffer.Aggiungi(new ComandoVariaInventario(agente.ID, Risorsa.Denaro, -_costoOggetto));
         buffer.Aggiungi(new ComandoVariaInventario(agente.ID, _oggettoAcquistato, _qtaAcquistata));
         Stato = StatoAzione.Completata;
+    }
+
+    public override double CalcolaCosto(AgenteBase agente, Citta citta)
+    {
+        // Costo di pianificazione dato da una componente fissa più una pesata
+        // L'azione è più "faticosa" da raggiungere se l'agente deve spendere molto
+        agente.Inventario.TryGetValue(Risorsa.Denaro, out double saldo);
+        double pesoAcquisto = _costoOggetto / saldo;
+        if (_costoOggetto > saldo) pesoAcquisto *= 10;
+
+        return 1 + pesoAcquisto;
     }
 
     public override bool VerificaPrecondizioni(AgenteBase agente, Citta citta)

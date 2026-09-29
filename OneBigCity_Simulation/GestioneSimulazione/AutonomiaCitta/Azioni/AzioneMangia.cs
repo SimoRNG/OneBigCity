@@ -13,7 +13,6 @@ public class AzioneMangia : AzioneGOAP
     public AzioneMangia(double incrementoFame)
     {
         Nome = "MangiaCibo";
-        Costo = 1.0;
         DurataInSecondiSimulazione = 10; // Dura 10 secondi virtuali
         _incrementoFame = incrementoFame;
 
@@ -50,5 +49,10 @@ public class AzioneMangia : AzioneGOAP
         buffer.Aggiungi(new ComandoVariaInventario(agente.ID, Risorsa.Cibo, -1));
         buffer.Aggiungi(new ComandoVariaBisogno(agente.ID, Bisogno.Fame, _incrementoFame));
         Stato = StatoAzione.Completata;
+    }
+
+    public override double CalcolaCosto(AgenteBase agente, Citta citta)
+    {
+        return 1;
     }
 }

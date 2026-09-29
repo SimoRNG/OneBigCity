@@ -95,6 +95,7 @@ public class PianificatoreGOAP
         // Fatti di contesto
         stato["InCasa"] = ControllaSeInCasa(agente, citta);
         stato["InLuogoLavoro"] = ControllaSeInLuogoLavoro(agente, citta);
+        stato["InNegozio"] = ControllaSeInEdificioCommerciale(agente, citta);
 
         return stato;
     }
@@ -182,6 +183,12 @@ public class PianificatoreGOAP
     {
         var luogoLavoro = citta.Edifici.FirstOrDefault(e => e.OccupantiAttuali.Contains(agente.ID));
         return luogoLavoro != null && luogoLavoro.Tipo == TipoEdificio.Industriale;
+    }
+
+    private bool ControllaSeInEdificioCommerciale(AgenteBase agente, Citta citta)
+    {
+        var luogoNegozio = citta.Edifici.FirstOrDefault(e => e.OccupantiAttuali.Contains(agente.ID));
+        return luogoNegozio != null && luogoNegozio.Tipo == TipoEdificio.Commerciale;
     }
 
     #endregion
