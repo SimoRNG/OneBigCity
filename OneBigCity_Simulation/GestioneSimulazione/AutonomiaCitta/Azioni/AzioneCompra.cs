@@ -4,6 +4,7 @@ using OneBigCity_Model.Classi.Entita.EnumEntita;
 using OneBigCity_Model.Interfacce;
 using OneBigCity_Simulation.GestioneSimulazione.Azioni;
 using OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;
+using OneBigCity_Simulation.GestioneSimulazione.GestioneAgenti;
 
 namespace OneBigCity_Simulation.GestioneSimulazione.AutonomiaCitta.Azioni;
 
@@ -22,7 +23,7 @@ public class AzioneCompra : AzioneGOAP, IAzioneGOAP
         _oggettoAcquistato = oggettoAcquisto;
         _qtaAcquistata = quantitaAcquistata;
 
-        Effetti.Add($"HaRisorsa_{oggettoAcquisto}", true);
+        Precondizioni.Add("Luogo", "Negozio");
     }
     public override void Inizia(AgenteBase agente, Citta citta, CommandBuffer buffer)
     {
@@ -32,6 +33,8 @@ public class AzioneCompra : AzioneGOAP, IAzioneGOAP
 
     public override void Aggiorna(AgenteBase agente, ContestoTick contesto, CommandBuffer buffer)
     {
+        if (LuoghiAgente.GetLuogo(agente, contesto.Citta) != "Negozio") { Stato = StatoAzione.Fallita; return; }
+
         _secondiTrascorsi += contesto.DeltaTempoSecondi;
         if (_secondiTrascorsi < DurataInSecondiSimulazione) return;
 
@@ -51,10 +54,21 @@ public class AzioneCompra : AzioneGOAP, IAzioneGOAP
         // Costo di pianificazione dato da una componente fissa più una pesata
         // L'azione è più "faticosa" da raggiungere se l'agente deve spendere molto
         agente.Inventario.TryGetValue(Risorsa.Denaro, out double saldo);
-        double pesoAcquisto = _costoOggetto / saldo;
+
+        double pesoAcquisto = 99;
+        if (saldo > 0) pesoAcquisto = _costoOggetto / saldo;
         if (_costoOggetto > saldo) pesoAcquisto *= 10;
 
         return 1 + pesoAcquisto;
+    }
+
+    public override Dictionary<string, object> CalcolaEffetti(AgenteBase agente, Citta citta)
+    {
+        var risultato = new Dictionary<string, object>();
+
+        risultato.Add($"HaRisorsa_{_oggettoAcquistato.ToString()}", true);
+
+        return risultato;
     }
 
     public override bool VerificaPrecondizioni(AgenteBase agente, Citta citta)

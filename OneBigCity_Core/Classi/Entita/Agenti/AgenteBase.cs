@@ -11,6 +11,12 @@ public abstract class AgenteBase
 {
     public Guid ID { get; set; } = Guid.NewGuid();
     public Punto3D Posizione { get; set; } = new(0, 0, 0);
+    
+    /// <summary>
+    /// null = in città , altrimenti l'id dell'edificio
+    /// Posizione di conseguenza sarà relativa alla griglia della città o dell'edificio (planimetria interna)
+    /// </summary>
+    public Guid? EdificioCorrente { get; set; } = null;
 
 
     public Dictionary<Bisogno, double> Bisogni { get; set; } = new(); // Chiave: Bisogno - Valore: Percentuale soddisfamento
@@ -20,6 +26,8 @@ public abstract class AgenteBase
     public bool PuoMuoversi { get; set; } = true;
     public List<CellaGriglia> Percorso { get; set; } = new();
     public int IndiceStepPercorso { get; set; } = -1;
+    public int VelocitaMovimento { get; set; } = 8; // celle per tick
+
 
     // --- Piano d'esecuzione ---
     public Queue<IAzioneGOAP> PianoCorrente { get; set; } = new(); // Lista ordinata di operazioni da eseguire

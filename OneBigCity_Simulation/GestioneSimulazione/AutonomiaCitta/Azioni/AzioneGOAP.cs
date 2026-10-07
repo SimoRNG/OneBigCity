@@ -18,6 +18,7 @@ public abstract class AzioneGOAP : IAzioneGOAP, ICloneable
     public abstract bool VerificaPrecondizioni(AgenteBase agente, Citta citta);
     public abstract void Aggiorna(AgenteBase agente, ContestoTick contesto, CommandBuffer buffer);
     public virtual double CalcolaCosto(AgenteBase agente, Citta citta) => Costo;
+    public virtual Dictionary<string, object> CalcolaEffetti(AgenteBase agente, Citta citta) => Effetti;
 
 
     public virtual void Inizia(AgenteBase agente, Citta citta, CommandBuffer buffer)

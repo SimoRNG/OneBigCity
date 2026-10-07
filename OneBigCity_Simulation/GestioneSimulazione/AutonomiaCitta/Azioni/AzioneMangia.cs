@@ -15,11 +15,12 @@ public class AzioneMangia : AzioneGOAP
         Nome = "MangiaCibo";
         DurataInSecondiSimulazione = 10; // Dura 10 secondi virtuali
         _incrementoFame = incrementoFame;
+        Costo = 1;
 
         // PRECONDIZIONI
         Precondizioni.Add("HaRisorsa_Cibo", true);
 
-        // SODDISFA IL GOAL: ObiettivoSoddisfaFame cerca "FameSoddisfatta" = true
+        // EFFETTI
         Effetti.Add("FameSoddisfatta", true);
     }
 
@@ -51,8 +52,4 @@ public class AzioneMangia : AzioneGOAP
         Stato = StatoAzione.Completata;
     }
 
-    public override double CalcolaCosto(AgenteBase agente, Citta citta)
-    {
-        return 1;
-    }
 }

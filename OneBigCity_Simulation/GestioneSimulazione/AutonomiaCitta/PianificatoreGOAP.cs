@@ -3,6 +3,7 @@ using OneBigCity_Model.Classi.Entita;
 using OneBigCity_Model.Classi.Entita.Agenti;
 using OneBigCity_Model.Classi.Entita.EnumEntita;
 using OneBigCity_Simulation.GestioneSimulazione.Azioni;
+using OneBigCity_Simulation.GestioneSimulazione.GestioneAgenti;
 
 namespace OneBigCity_Simulation.GestioneSimulazione.AutonomiaCitta;
 
@@ -51,13 +52,13 @@ public class PianificatoreGOAP
                     azione.VerificaPrecondizioni(agente, citta))
                 {
 
-                    Dictionary<string, object> nuovoStato = ApplicaEffetti(nodoCorrente.Stato, azione.Effetti);
+                    Dictionary<string, object> nuovoStato = ApplicaEffetti(nodoCorrente.Stato, azione.CalcolaEffetti(agente, citta));
                     string chiaveNuovoStato = GeneraChiaveStato(nuovoStato);
 
                     if (closedSet.Contains(chiaveNuovoStato))
                         continue;
 
-                    double nuovoCostoG = nodoCorrente.CostoG + azione.Costo;
+                    double nuovoCostoG = nodoCorrente.CostoG + azione.CalcolaCosto(agente, citta);
                     double euristica = CalcolaEuristica(nuovoStato, obiettivo.StatoDesiderato);
 
                     NodoGOAP? nodoEsistente = openSet.FirstOrDefault(n => GeneraChiaveStato(n.Stato) == chiaveNuovoStato);
@@ -93,9 +94,8 @@ public class PianificatoreGOAP
         }
 
         // Fatti di contesto
-        stato["InCasa"] = ControllaSeInCasa(agente, citta);
-        stato["InLuogoLavoro"] = ControllaSeInLuogoLavoro(agente, citta);
-        stato["InNegozio"] = ControllaSeInEdificioCommerciale(agente, citta);
+        stato["Luogo"] = LuoghiAgente.GetLuogo(agente, citta);
+        foreach (var luogo in new[] { "Casa", "Negozio", "Lavoro" }) stato[$"VicinoA_{luogo}"] = LuoghiAgente.IsVicinoA(agente, citta, luogo);
 
         return stato;
     }
@@ -168,30 +168,6 @@ public class PianificatoreGOAP
 
     #endregion
 
-
-    #region Helper Metodi per lo Stato
-
-    private bool ControllaSeInCasa(AgenteBase agente, Citta citta)
-    {
-        var casa = citta.Edifici.FirstOrDefault(e => e.Proprietario == agente.ID);
-        if (casa == null) return false;
-
-        return casa.OccupantiAttuali.Contains(agente.ID);
-    }
-
-    private bool ControllaSeInLuogoLavoro(AgenteBase agente, Citta citta)
-    {
-        var luogoLavoro = citta.Edifici.FirstOrDefault(e => e.OccupantiAttuali.Contains(agente.ID));
-        return luogoLavoro != null && luogoLavoro.Tipo == TipoEdificio.Industriale;
-    }
-
-    private bool ControllaSeInEdificioCommerciale(AgenteBase agente, Citta citta)
-    {
-        var luogoNegozio = citta.Edifici.FirstOrDefault(e => e.OccupantiAttuali.Contains(agente.ID));
-        return luogoNegozio != null && luogoNegozio.Tipo == TipoEdificio.Commerciale;
-    }
-
-    #endregion
 }
 
 

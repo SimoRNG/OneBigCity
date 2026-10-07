@@ -1,7 +1,7 @@
 ﻿using OneBigCity_Model.Classi.Meteo;
 namespace OneBigCity_Model.Classi.Eventi;
 
-public class EventoMeteoCambiato : EventoLoggatoBase
+public class EventoMeteoCambiato 
 {
     public CondizioneAtmosferica Precedente { get; }
     public CondizioneAtmosferica Nuova { get; }

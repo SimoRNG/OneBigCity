@@ -12,6 +12,7 @@ namespace OneBigCity_Model.Classi.Entita.Edifici;
 
 [JsonDerivedType(typeof(Abitazione), typeDiscriminator: "Abitazione")]
 [JsonDerivedType(typeof(Industria), typeDiscriminator: "Industria")]
+[JsonDerivedType(typeof(Negozio), typeDiscriminator: "Negozio")]
 public class EdificioBase : IEntita
 {
     public EdificioBase() { }
@@ -34,10 +35,6 @@ public class EdificioBase : IEntita
     public List<Punto3D> CoordinateAccessiEsterni { get; set; } = new(); // Ingressi calpestabili dall'esterno
     public List<Punto3D> CoordinateOccupate { get; set; } = new(); // Celle della mappa occupate dall'impronta a terra della struttura
     public int CapienzaMassima { get; set; }
-
-
-    public List<Guid> OccupantiAttuali { get; set; } = new(); // Lista dei Guid delleS persone attualmente presenti dentro la struttura
-
 
     public MappaGriglia PlanimetriaInterna { get; set; } = new(5, 5, 0, 0); // Mappa interna dell'edificio - dove vengono posizionate le persone all'interno
     public List<Punto3D> CoordinateAccessiInterni { get; set; } = new() { new Punto3D(0, 0, 0) }; // Punti sulla griglia interna per uscire dall'edificio

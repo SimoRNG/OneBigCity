@@ -1,9 +1,11 @@
 ﻿using OneBigCity_Console;
 using OneBigCity_Model.AutonomiaCitta.Obiettivi;
 using OneBigCity_Model.Classi.Entita;
+using OneBigCity_Model.Classi.Entita.EnumEntita;
 using OneBigCity_Model.Classi.Eventi;
 using OneBigCity_Model.Classi.Meteo.EnumMeteo;
 using OneBigCity_Simulation.GestioneSimulazione.AutonomiaCitta.Azioni;
+using OneBigCity_Simulation.GestioneSimulazione.AutonomiaCitta.Obiettivi;
 using OneBigCity_Simulation.GestioneSimulazione.Azioni;
 using OneBigCity_Simulation.GestioneSimulazione.GestioneAgenti;
 using OneBigCity_Simulation.GestioneSimulazione.Obiettivi;
@@ -95,7 +97,8 @@ List<ObiettivoGOAP> GetObiettiviDisponibili()
 {
     return new()
     {
-        new ObiettivoSoddisfaFame()
+        new ObiettivoSoddisfaFame(),
+        new ObiettivoRecuperaEnergia()
     };
 }
 
@@ -103,7 +106,18 @@ List<AzioneGOAP> GetAzioniDisponibili()
 {
     return new()
     {
-        new AzioneMangia()
+        new AzioneMangia(60),
+        new AzioneCompra(Risorsa.Cibo, 10, 2),
+        new AzioneDormi(),
+        new AzioneVaiA("Negozio"),
+        new AzioneVaiA("Casa"),
+        new AzioneVaiA("Lavoro"),
+        new AzioneEntra("Negozio"),
+        new AzioneEntra("Casa"),
+        new AzioneEntra("Lavoro"),
+        new AzioneEsci("Negozio"),
+        new AzioneEsci("Lavoro"),
+        new AzioneEsci("Casa"),
     };
 }
 

@@ -36,7 +36,7 @@ public class SistemaMovimento :ISistemaSimulazione
                 Punto3D prossimaPosizione = agente.Percorso[agente.IndiceStepPercorso].Posizione;
 
                 // Comando per spostare atomicamente l'agente sulla nuova cella
-                buffer.Aggiungi(new ComandoAvanzaAgenteStep(agente.ID, prossimaPosizione));
+                buffer.Aggiungi(new ComandoAvanzaAgenteStep(agente.ID, agente.VelocitaMovimento));
             }
         }
     }

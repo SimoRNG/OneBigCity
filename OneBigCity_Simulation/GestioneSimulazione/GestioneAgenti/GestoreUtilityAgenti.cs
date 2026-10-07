@@ -31,6 +31,7 @@ public class GestoreUtilityAgenti
                 continue;
 
             double priorita = obiettivo.CalcolaPriorita(agente, citta);
+            if (priorita <= 0) continue;
 
             if (priorita > prioritaMassima)
             {
@@ -71,5 +72,13 @@ public class GestoreUtilityAgenti
             agente.ObiettivoCorrente = goalMigliore; 
             agente.PianoCorrente = new Queue<IAzioneGOAP>(nuovoPiano);
         }
+    }
+
+    public void InterrompiPiano(AgenteBase agente)
+    {
+        if (agente.AzioneInEsecuzione is AzioneGOAP azione) azione.Annulla(agente);
+        agente.AzioneInEsecuzione = null;
+        agente.PianoCorrente.Clear();
+        agente.ObiettivoCorrente = null;
     }
 }

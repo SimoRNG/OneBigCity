@@ -49,11 +49,8 @@ public class SistemaEdifici : ISistemaSimulazione, IDisposable
                 edificio.Accesso = TipoAccessoEdificio.Vietato;
                 edificio.CoordinateAccessiEsterni = new(); // Edificio distrutto - nessun accesso
                 edificio.PlanimetriaInterna = new();
-                if (edificio.OccupantiAttuali.Count > 0)
-                {
-                    foreach (Guid p in edificio.OccupantiAttuali)
-                        buffer.Aggiungi(new ComandoEliminaPersona(p));
-                }
+                
+                // TODO gestire l'eliminazione di agenti quando viene giù un edificio
             }
         }
     }

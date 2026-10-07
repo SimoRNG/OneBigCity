@@ -1,52 +1,56 @@
 ﻿using OneBigCity_Model.Classi.Entita;
-using OneBigCity_Model.Classi.Entita.Agenti;
 using OneBigCity_Model.Classi.Geografia;
+using OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;
 using OneBigCity_Simulation.Utilita;
-
-namespace OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;
 
 public record ComandoMuovi(Guid idAgente, Punto3D destinazione) : IComandoSimulazione
 {
     public void Esegui(Citta citta)
     {
-        AgenteBase? agente = citta.Abitanti.FirstOrDefault(a => a.ID == idAgente);
-
+        var agente = citta.Abitanti.FirstOrDefault(a => a.ID == idAgente);
         if (agente == null || !agente.PuoMuoversi) return;
-        if (agente.Posizione == destinazione) return;
 
-        List<CellaGriglia>? nuovoPercorso = AlgoritmiPathFinding.A_Star(
-            citta.Mappa,
-            citta.Mappa.OttieniCella(agente.Posizione),
-            citta.Mappa.OttieniCella(destinazione)
-        );
-
-        if(nuovoPercorso == null) return;
-
-        if (nuovoPercorso.Count > 0)
+        MappaGriglia? mappa = citta.Mappa;
+        if (agente.EdificioCorrente != null)
         {
-            agente.Percorso = nuovoPercorso;
-            agente.IndiceStepPercorso = 0; // Primo passo della lista
+            mappa = citta.Edifici.FirstOrDefault(e => e.ID == agente.EdificioCorrente)?.PlanimetriaInterna;
+            if (mappa == null) return;
         }
+
+        var percorso = AlgoritmiPathFinding.A_Star(
+            mappa,
+            mappa.OttieniCella(agente.Posizione),
+            mappa.OttieniCella(destinazione));
+
+        // Nessun percorso oppure già a destinazione (A* restituisce solo la partenza)
+        if (percorso == null || percorso.Count <= 1)
+        {
+            agente.Percorso.Clear();
+            agente.IndiceStepPercorso = -1;
+            return;
+        }
+
+        agente.Percorso = percorso;
+        agente.IndiceStepPercorso = 1; // lo 0 è la cella dove si trova già
     }
 }
 
-
-public record ComandoAvanzaAgenteStep(Guid idAgente, Punto3D nuovaPosizione) : IComandoSimulazione
+public record ComandoAvanzaAgenteStep(Guid idAgente, int passi) : IComandoSimulazione
 {
     public void Esegui(Citta citta)
     {
-        AgenteBase? agente = citta.Abitanti.FirstOrDefault(a => a.ID == idAgente);
-        if (agente != null)
-        {
-            agente.Posizione = nuovaPosizione;
-            agente.IndiceStepPercorso++;
+        var agente = citta.Abitanti.FirstOrDefault(a => a.ID == idAgente);
+        if (agente == null) return;
+        if (agente.IndiceStepPercorso < 0 || agente.IndiceStepPercorso >= agente.Percorso.Count) return;
 
-            // Se l'agente ha completato il percorso resetto la sequenza
-            if (agente.IndiceStepPercorso >= agente.Percorso.Count)
-            {
-                agente.Percorso.Clear();
-                agente.IndiceStepPercorso = -1;
-            }
+        int fine = Math.Min(agente.IndiceStepPercorso + passi, agente.Percorso.Count); // escluso
+        agente.Posizione = agente.Percorso[fine - 1].Posizione;
+        agente.IndiceStepPercorso = fine;
+
+        if (fine >= agente.Percorso.Count)
+        {
+            agente.Percorso.Clear();
+            agente.IndiceStepPercorso = -1;
         }
     }
 }

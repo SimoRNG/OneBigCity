@@ -1,5 +1,4 @@
 ﻿using OneBigCity_Model.Classi.Entita;
-using OneBigCity_Model.Classi.Entita.Agenti;
 using OneBigCity_Model.Classi.Entita.EnumEntita;
 
 namespace OneBigCity_Simulation.GestioneSimulazione.ComandiSistemi;

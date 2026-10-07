@@ -9,14 +9,14 @@
       "CoordinateOccupate": [
         {
           "X": 8,
-          "Y": 8,
+          "Y": 2,
           "Z": 0
         }
       ],
       "CoordinateAccessiEsterni": [
         {
           "X": 7,
-          "Y": 8,
+          "Y": 2,
           "Z": 0
         }
       ]
@@ -98,6 +98,27 @@
         {
           "X": 7,
           "Y": 8,
+          "Z": 0
+        }
+      ],
+      "CoordinateAccessiEsterni": [
+        {
+          "X": 7,
+          "Y": 7,
+          "Z": 0
+        }
+      ]
+    },
+    {
+      "$type": "Negozio",
+      "Nome": "Negozio Est Sud",
+      "Descrizione": "Negozio situato a sud-est",
+      "PercentualeCondizione": 100,
+      "CapienzaMassima": 5,
+      "CoordinateOccupate": [
+        {
+          "X": 8,
+          "Y": 7,
           "Z": 0
         }
       ],

@@ -30,16 +30,29 @@ public class SistemaAgenti : ISistemaSimulazione, IDisposable
 
     public void Aggiorna(ContestoTick contesto, CommandBuffer buffer)
     {
-        // Logica iniziale base - gli agenti alle ore 8 vanno verso il primo luogo industriale della lista edifici della città
-        // alle 17 invece tornano a casa (se ce l'hanno)
-        // Per le persone che hanno raggiunto la destinazione provo a farle entrare
-
         GestisciSaluteAgenti(contesto.OrarioCorrente, contesto.Citta, buffer);
         GestisciBisogniAgente(contesto.OrarioCorrente, contesto.Citta, buffer);
 
         foreach (AgenteBase agente in contesto.Citta.Abitanti)
         {
+            agente.Inventario[Risorsa.Denaro] = 100; // debug
+
             EseguiCicloGOAPAgente(agente, contesto, buffer);
+
+            // debug
+            if (agente is Persona p && p.Nome == "Mario")
+            {
+                string log = $"{p.Nome} : " +
+                             $"\nEdificio: {(p.EdificioCorrente == null ? "Città " : p.EdificioCorrente.ToString())}" +
+                             $"\nObiettivo: {(p.ObiettivoCorrente == null ? "Nessuno " : p.ObiettivoCorrente)}" +
+                             $"\nAzione: {(p.AzioneInEsecuzione == null ? "Nessuna " : p.AzioneInEsecuzione)}" + 
+                             $"\nFame: {(p.Bisogni[Bisogno.Fame].ToString())}" +
+                             $"\nEnergia: {(p.Bisogni[Bisogno.Energia].ToString())}" + 
+                             $"\nPosizione: {(p.Posizione)}";
+
+
+                _eventBus.Pubblica(new EventoCitta(contesto.OrarioCorrente, log));
+            }
         }
 
     }
@@ -62,7 +75,7 @@ public class SistemaAgenti : ISistemaSimulazione, IDisposable
         if (agente.AzioneInEsecuzione == null && agente.PianoCorrente.Count == 0)
         {
             _gestoreUtility.AggiornaDecisioneAgente(agente, contesto.Citta, _azioniTotaliDisponibili);
-  
+            
         }
 
         // Se l'agente non ha un'azione in corso ma ha azioni nel piano passo alla prossima

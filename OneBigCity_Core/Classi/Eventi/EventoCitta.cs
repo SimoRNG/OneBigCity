@@ -1,6 +1,6 @@
 ﻿namespace OneBigCity_Model.Classi.Eventi;
 
-public class EventoCitta : EventoLoggatoBase
+public class EventoCitta 
 {
     // Classe per eventi riguardanti la città
     public DateTime DataOraCitta { get; }

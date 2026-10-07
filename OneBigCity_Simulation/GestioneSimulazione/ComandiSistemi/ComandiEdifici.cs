@@ -7,51 +7,45 @@ public record ComandoEntraEdificio(Guid idAgente, Guid idEdificio) : IComandoSim
 {
     public void Esegui(Citta citta)
     {
-        var edificio = citta.Edifici.FirstOrDefault(e => e.ID == idEdificio);
         var agente = citta.Abitanti.FirstOrDefault(a => a.ID == idAgente);
+        var edificio = citta.Edifici.FirstOrDefault(e => e.ID == idEdificio);
+        if (agente == null || edificio == null) return;
 
-        if (edificio != null && agente != null)
-        {
-            if (edificio.CapienzaMassima != edificio.OccupantiAttuali.Count()) edificio.OccupantiAttuali.Add(idAgente);
+        if (agente.EdificioCorrente != null) return; // già dentro
+        if (!edificio.CoordinateAccessiEsterni.Contains(agente.Posizione)) return; // non è su un accesso
+        if (edificio.CoordinateAccessiInterni.Count == 0) return;
 
-            // Tolgo l'agente dalla mappa esterna (TODO - gli agenti dovrebbero tenere da qualche parte in memoria che
-            // sono all'interno di un edificio?)
+        int occupanti = citta.Abitanti.Count(a => a.EdificioCorrente == edificio.ID);
+        if (occupanti >= edificio.CapienzaMassima) return; // pieno
 
-            agente.Posizione = new Punto3D(0, 0, 0);
-        }
+        agente.EdificioCorrente = edificio.ID;
+        agente.Posizione = edificio.CoordinateAccessiInterni[0];
+        agente.Percorso.Clear();
+        agente.IndiceStepPercorso = -1;
     }
 }
 
-
-public record ComandoEsciEdificio(Guid idAgente, Guid idEdificio) : IComandoSimulazione
+public record ComandoEsciEdificio(Guid idAgente) : IComandoSimulazione
 {
     public void Esegui(Citta citta)
     {
-        var edificio = citta.Edifici.FirstOrDefault(e => e.ID == idEdificio);
         var agente = citta.Abitanti.FirstOrDefault(a => a.ID == idAgente);
+        if (agente?.EdificioCorrente == null) return;
 
-        if (edificio != null && agente != null)
-        {
-            if (edificio.CapienzaMassima != edificio.OccupantiAttuali.Count()) edificio.OccupantiAttuali.Remove(idAgente);
+        var edificio = citta.Edifici.FirstOrDefault(e => e.ID == agente.EdificioCorrente);
+        if (edificio == null) return;
+        if (!edificio.CoordinateAccessiInterni.Contains(agente.Posizione)) return; // deve essere su un accesso interno
 
-            // Posiziono su una cella della griglia esterna all'edifico (se esiste) l'agente. Se non ci sono celle disponibili
-            // lo metto in una cella valida adiacente all'edificio
-            if (edificio.CoordinateAccessiEsterni.Count() > 0)
-            {
-                Punto3D accesso = edificio.CoordinateAccessiEsterni[0];
-                agente.Posizione = new Punto3D(accesso.X, accesso.Y, accesso.Z);
-            }
-            else
-            {
-                Punto3D adiacente = Utilita.AlgoritmiPathFinding
-                    .CercaPrimaCellaCalpestabileBFS(citta.Mappa, edificio.CoordinateOccupate[0]);
+        Punto3D uscita = edificio.CoordinateAccessiEsterni.Count > 0
+            ? edificio.CoordinateAccessiEsterni[0]
+            : Utilita.AlgoritmiPathFinding.CercaPrimaCellaCalpestabileBFS(citta.Mappa, edificio.CoordinateOccupate[0]);
 
-                agente.Posizione = adiacente;
-            }
-        }
+        agente.EdificioCorrente = null;
+        agente.Posizione = uscita;
+        agente.Percorso.Clear();
+        agente.IndiceStepPercorso = -1;
     }
 }
-
 
 
 public record ComandoVariaCondizioneEdificio(Guid idEdificio, int variazionePercentuale) : IComandoSimulazione
